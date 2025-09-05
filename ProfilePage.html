@@ -14,7 +14,8 @@
             justify-content: center;
             align-items: center;
             font-family: 'Inter', Arial, sans-serif;
-            background: #f8f9fb;
+            background: url('/Background.png') no-repeat center center fixed;
+            background-size: cover;
             color: #222;
             position: relative;
             overflow-x: hidden;
@@ -28,48 +29,23 @@
             z-index: -1;
             opacity: 0.22;
         }
-        .blob1 {
-            width: 300px;
-            height: 280px;
-            background: #fa3c65;
-            top: -80px;
-            left: -100px;
-            transform: rotate(25deg);
-        }
-        .blob2 {
-            width: 240px;
-            height: 260px;
-            background: #000;
-            bottom: -100px;
-            right: -60px;
-            transform: rotate(-15deg);
-        }
-        .blob3 {
-            width: 200px;
-            height: 200px;
-            background: #555;
-            top: 40%;
-            left: -70px;
-            transform: rotate(40deg);
-        }
-        .blob4 {
-            width: 150px;
-            height: 180px;
-            background: #999;
-            bottom: 20%;
-            right: 30%;
-            transform: rotate(70deg);
-        }
-        
+        .blob1 { width: 300px; height: 280px; background: #fa3c65; top: -80px; left: -100px; transform: rotate(25deg); }
+        .blob2 { width: 240px; height: 260px; background: #000; bottom: -100px; right: -60px; transform: rotate(-15deg); }
+        .blob3 { width: 200px; height: 200px; background: #555; top: 40%; left: -70px; transform: rotate(40deg); }
+        .blob4 { width: 150px; height: 180px; background: #999; bottom: 20%; right: 30%; transform: rotate(70deg); }
+
         .profile-card {
-            background: #fff;
-            border-radius: 1.4rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            padding: 2.5rem 2rem;
-            max-width: 800px;
-            width: 100%;
-            z-index: 1;
-        }
+    background: rgba(255,255,255,0.42);   /* updated */
+    backdrop-filter: blur(12px);          /* glass effect */
+    -webkit-backdrop-filter: blur(12px);  /* safari support */
+    border-radius: 1.4rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    padding: 2.5rem 2rem;
+    max-width: 800px;
+    width: 100%;
+    z-index: 1;
+}
+
         .profile-title {
             font-family: 'Montserrat', Arial, sans-serif;
             font-weight: 900;
@@ -77,9 +53,9 @@
             margin-bottom: 2rem;
             text-align: center;
         }
-        .profile-title span {
-            color: #fa3c65;
-        }
+        .profile-title span { color: #fa3c65; }
+
+        /* Input fields */
         .input-field {
             position: relative;
             margin-bottom: 1.4rem;
@@ -92,7 +68,8 @@
             display: block;
             margin-bottom: 0.3rem;
         }
-        .input-field input, .input-field textarea {
+        .input-field input,
+        .input-field textarea {
             width: 100%;
             padding: 0.6rem 0;
             border: none;
@@ -103,33 +80,39 @@
             background: transparent;
             transition: all 0.3s ease;
         }
-        .input-field input:focus, .input-field input:not(:placeholder-shown) {
+
+        /* Focus (before entry) → pink box */
+        .input-field input:focus,
+        .input-field textarea:focus {
             border: 2px solid #fa3c65;
             border-radius: 0.6rem;
             padding: 0.8rem 1rem;
         }
-        .input-field textarea:focus, .input-field textarea:not(:placeholder-shown) {
-            border: 2px solid #fa3c65;
-            border-radius: 0.6rem;
-            padding: 0.8rem 1rem;
+
+        /* After entry → pink underline */
+        .input-field input.has-content,
+        .input-field textarea.has-content {
+            border: none;
+            border-bottom: 2px solid #fa3c65;
+            border-radius: 0;
+            padding: 0.6rem 0;
         }
+
         .btn-primary {
             background-color: #111827;
             color: #fff;
             transition: background 0.2s ease;
         }
-        .btn-primary:hover {
-            background: #232323;
-        }
+        .btn-primary:hover { background: #232323; }
+
         .tag {
             background-color: #2EC4B6;
             color: white;
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .tag:hover {
-            background-color: #24A396;
-        }
+        .tag:hover { background-color: #24A396; }
+
         .section-header {
             font-family: 'Montserrat', Arial, sans-serif;
             font-weight: 900;
@@ -261,7 +244,6 @@
         // Function to create a tag
         function createTag(text, container) {
             if (!text.trim()) return;
-
             const tag = document.createElement('span');
             tag.className = 'tag rounded-full px-4 py-2 text-xs font-semibold flex items-center gap-1';
             tag.innerHTML = `
@@ -279,7 +261,6 @@
             createTag(skillInput.value, skillsContainer);
             skillInput.value = '';
         });
-
         skillInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -306,21 +287,16 @@
                 achievementItem.querySelector('.achievement-remove').addEventListener('click', () => achievementItem.remove());
             }
         });
-
         achievementInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 addAchievementBtn.click();
             }
         });
-        
+
         // Dynamic field styling
         const allInputFields = document.querySelectorAll('.input-field input, .input-field textarea');
         allInputFields.forEach(field => {
-            if (field.value) {
-                field.classList.add('has-content');
-            }
-            
             field.addEventListener('blur', () => {
                 if (field.value.trim() !== '') {
                     field.classList.add('has-content');

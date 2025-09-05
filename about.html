@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About Us - Synapse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* === Copy of your homepage styles === */
+    body {
+      margin: 0;
+      background: #f5f6f8;
+      font-family: 'Inter', Arial, sans-serif;
+      min-height: 100vh;
+      color: #222;
+
+      background-image: url('images/Background.png');
+  background-size: cover;        /* cover full screen */
+  background-position: center;   /* center the image */
+  background-repeat: no-repeat;  /* don't repeat */
+  background-attachment: fixed;  /* fixed when scrolling */
+    }
+    header {
+      position: sticky;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.42);
+      box-shadow: 0 1px 22px 0 rgba(70,70,88,0.09);
+      -webkit-backdrop-filter: blur(13px);
+      backdrop-filter: blur(13px);
+    }
+    .navbar {
+      max-width: 1280px; margin: 0 auto; display: flex; align-items: center;
+      justify-content: space-between; padding: 1.2rem 2.5vw 1.05rem 2.5vw;
+    }
+    .logo {
+  display: flex; 
+  align-items: center; 
+  cursor: pointer;
+}
+
+.logo img {
+  width: 150px;   /* new width */
+  height: 75px;   /* new height */
+  object-fit: contain; /* keep image proportion */
+}
+
+    .navbar-actions { display: flex; align-items: center; gap: 1.4rem; }
+    .lang-btn,.login-link,.signup-btn {
+      background:none; border:none; font-family:inherit; cursor:pointer;
+    }
+    .signup-btn { background:#111; color:#fff; border-radius:2rem; padding:.58em 1.25em; font-weight:600; }
+    main { max-width: 1200px; margin:0 auto; padding-top:1px; }
+    
+    /* Hero Section */
+    .hero {
+      margin-top: 2.6rem;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 1.5rem 1.1rem 2rem 1.1rem;
+      text-align: center;
+    }
+    .hero-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 2.45rem;
+      text-align: center;
+      line-height: 1.18;
+      margin-bottom: 1rem;
+      color: #000;
+    }
+    .hero-title .highlight { color: #fa3c65; }
+    .hero-desc {
+      font-size: 1.14rem;
+      max-width: 600px;
+      color: #565764;
+      margin-bottom: 2.2rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+    .join-btn {
+      margin-top: .7rem;
+      padding: .9em 2.1em;
+      font-size: 1.16rem; background: #1a1a1a; color: #fff;
+      border: none; border-radius: 2.5rem; cursor: pointer;
+      font-weight: 700; letter-spacing: .01em;
+      box-shadow: 0 2px 13px rgba(70,70,95,0.12);
+      transition: filter .18s, background .16s;
+    }
+    .join-btn:hover { background: #23272a; filter: brightness(1.07); }
+
+    /* Team Section */
+    .team {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin: 3rem 1rem;
+    }
+    .member {
+      background:rgba(255,255,255,0.42) ;
+      padding: 1.5rem 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      width: 220px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .member:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .member img {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+    .member h4 { font-weight: 700; margin-bottom: .3rem; }
+    .member p { color:#565764; font-weight: 500; }
+    
+    @media (max-width: 500px) {
+      .hero-title { font-size: 1.6rem; }
+      .hero-desc { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
+    </div>
+    <div class="navbar-actions">
+      <button class="lang-btn">&#127760; English</button>
+      <button class="login-link">Log in</button>
+      <button class="signup-btn">Sign up</button>
+    </div>
+  </nav>
+</header>
+
+  <main>
+    <section class="hero">
+      <h1 class="hero-title">
+      Meet Our <span class="highlight">Team</span>
+    </h1>
+    <p class="hero-desc">
+      The people behind Synapse. Frontend, AI/ML, Backend, and UI/UX experts bringing your ideas to life.
+    </p>
+    <button class="join-btn">Join Synapse</button>
+    </section>
+
+    <section class="team">
+      <div class="member">
+        <img src="images/megha.jpg" alt="Megha">
+        <h4>Megha</h4>
+        <p>Frontend Developer</p>
+      </div>
+      <div class="member">
+        <img src="images/jaimin.jpg" alt="Jaimin">
+        <h4>Jaimin Kundal</h4>
+        <p>AI/ML</p>
+      </div>
+      <div class="member">
+        <img src="images/bhavya.jpg" alt="Bhavya">
+        <h4>Bhavya Agrawal</h4>
+        <p>Backend Developer</p>
+      </div>
+      <div class="member">
+        <img src="images/maritreye.jpg" alt="Maritreye">
+        <h4>Maritreye Pandey</h4>
+        <p>UI/UX</p>
+      </div>
+    </section>
+  </main>
+  <script>
+    // JS for sticky header shadow
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY>50) header.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+      else header.style.boxShadow = '0 1px 22px 0 rgba(70,70,88,0.09)';
+    });
+  </script>
+</body>
+</html>

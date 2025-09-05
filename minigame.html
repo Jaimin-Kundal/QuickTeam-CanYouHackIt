@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Synapse - Icebreaker Minigame</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/minigame.css">
+</head>
+<body>
+
+<div class="minigame-container">
+    <h1 class="minigame-title">Icebreaker Minigame</h1>
+    <p class="minigame-subtitle">Answer a few fun questions to check your team compatibility!</p>
+
+    <div class="flashcard-wrapper">
+        <div class="flashcard" id="minigame-card">
+            <div class="flashcard-front">
+                <p class="card-question" id="card-question"></p>
+            </div>
+            <div class="flashcard-back">
+                <p class="card-question" id="card-question-back"></p>
+                <div class="options-container" id="options-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="next-btn" id="next-btn">Next</button>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+</div>
+
+<script src="/js/minigame.js"></script>
+</body>
+</html>

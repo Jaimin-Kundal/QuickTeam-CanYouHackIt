@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Synapse - Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f8f9fb;
+      color: #222;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Abstract blobs */
+    .blob {
+      position: absolute;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      z-index: -1;
+      opacity: 0.22;
+    }
+    .blob1 {
+      width: 300px;
+      height: 280px;
+      background: #fa3c65;
+      top: -80px;
+      left: -100px;
+      transform: rotate(25deg);
+    }
+    .blob2 {
+      width: 240px;
+      height: 260px;
+      background: #000;
+      bottom: -100px;
+      right: -60px;
+      transform: rotate(-15deg);
+    }
+    .blob3 {
+      width: 200px;
+      height: 200px;
+      background: #555;
+      top: 40%;
+      left: -70px;
+      transform: rotate(40deg);
+    }
+    .blob4 {
+      width: 150px;
+      height: 180px;
+      background: #999;
+      bottom: 20%;
+      right: 30%;
+      transform: rotate(70deg);
+    }
+
+    /* Full circle in top-right */
+    .circle-top-right {
+      width: 240px;
+      height: 240px;
+      background: #fa3c65;
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.35;
+    }
+
+    .signup-card {
+      background: #fff;
+      border-radius: 1.4rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .signup-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+    }
+    .signup-title span {
+      color: #fa3c65;
+    }
+
+    .input-field {
+      position: relative;
+      margin-bottom: 1.4rem;
+      text-align: left;
+    }
+    .input-field label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .input-field input {
+      width: 100%;
+      padding: 0.6rem 0;
+      border: none;
+      border-bottom: 2px solid #fa3c65;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+
+    .input-field input:focus,
+    .input-field input:not(:placeholder-shown) {
+      border: 2px solid #fa3c65;
+      border-radius: 0.6rem;
+      padding: 0.8rem 1rem;
+    }
+
+    .signup-btn {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 2rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.8rem;
+      transition: background 0.2s ease;
+    }
+    .signup-btn:hover {
+      background: #232323;
+    }
+
+    .alt-action {
+      margin-top: 1rem;
+      font-size: 0.92rem;
+    }
+    .alt-action a {
+      color: #fa3c65;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .alt-action a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Curved blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="circle-top-right"></div>
+
+  <div class="signup-card">
+    <h2 class="signup-title">Join <span>Synapse</span></h2>
+    <form>
+      <div class="input-field">
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" placeholder=" " required>
+      </div>
+      <div class="input-field">
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" placeholder=" " required>
+      </div>
+      <div class="input-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder=" " required>
+      </div>
+      <div class="input-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder=" " required>
+      </div>
+      <div class="input-field">
+        <label for="confirm-password">Verify Password</label>
+        <input type="password" id="confirm-password" placeholder=" " required>
+      </div>
+      <button type="submit" class="signup-btn">Sign Up</button>
+    </form>
+    <p class="alt-action">
+      Already have an account? <a href="login.html">Log in</a>
+    </p>
+  </div>
+</body>
+</html>

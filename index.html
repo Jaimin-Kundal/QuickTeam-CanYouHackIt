@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuickTeam HackIt</title>
@@ -8,5 +9,285 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
   <h1 class="text-4xl text-blue-500 font-bold">Hello Tailwind!</h1>
+=======
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Synapse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('/Background.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Inter', Arial, sans-serif;
+      min-height: 100vh;
+      color: #222;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(255,255,255,0.42);
+      -webkit-backdrop-filter: blur(13px);
+      backdrop-filter: blur(13px);
+      border-bottom: none;
+    }
+
+    .navbar {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5vw 1.05rem 2.5vw;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 1.9rem;
+      color: #f64060;
+      letter-spacing: 0.5px;
+      user-select: none;
+    }
+
+    .logo img {
+      height: 75px;
+      width: 150px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .search-bar-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      margin: 0 2vw 0 2.2vw;
+      max-width: 570px;
+    }
+
+    .search-bar {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border-radius: 3rem;
+      background: #fff;
+      box-shadow: 0 1px 8px 0 rgba(70,70,88,0.06);
+      padding: 0.2rem 1.3rem 0.2rem 1.4rem;
+      gap: 0.8rem;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 1.05rem;
+      padding: 0.95rem 0.3rem 0.95rem 0;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .search-bar .loc { color: #6e7287; font-size: 1.07rem; font-weight: 600; margin-left: 1.2rem; white-space: nowrap; cursor: pointer; }
+    .search-bar .icon { color: #aaa; font-size: 1.3rem; margin-left: 0.7rem; }
+
+    .navbar-actions { display: flex; align-items: center; gap: 1.4rem; }
+
+    .lang-btn, .login-link, .signup-btn {
+      font-family: inherit;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: #23272a;
+      font-size: 1rem;
+      opacity: 0.75;
+      margin-right: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+      padding: 0.42em 0.9em;
+      transition: opacity 0.3s;
+    }
+
+    .lang-btn:hover { opacity: 1; }
+
+    .login-link {
+      background: none;
+      border: none;
+      color: #23272a;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .login-link:hover { opacity: 1; text-decoration: underline; }
+
+    .signup-btn {
+      margin-left: 0.65rem;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1rem;
+      padding: 0.58em 1.25em;
+      letter-spacing: 0.02em;
+      box-shadow: 0 1px 7px rgba(90, 90, 110, 0.08);
+      transition: background 0.16s, filter 0.18s;
+    }
+
+    .signup-btn:hover { background: #282828; }
+
+    main { max-width: 1200px; margin: 0 auto; padding-top: 1px; }
+
+    .hero {
+      margin-top: 2.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1.5rem 1.1rem 2rem 1.1rem;
+      color: #1f1f1f;
+      text-align: left;
+      max-width: 600px;
+    }
+
+    .hero-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 2.6rem;
+      line-height: 1.18;
+      color: #23272a;
+      margin: 0 0 0.9rem 0;
+      min-height: 3rem;
+    }
+
+    .highlight-pink { color: #fa3c65; }
+    .highlight-black { color: #23272a; }
+
+    .hero-desc {
+      font-size: 1.14rem;
+      max-width: 470px;
+      margin: 0 0 2.2rem 0;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #3b3b3b;
+    }
+
+    .join-btn {
+      margin-top: 0.7rem;
+      padding: 0.9em 2.1em;
+      font-size: 1.16rem;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      box-shadow: 0 2px 13px rgba(70, 70, 95, 0.12);
+      transition: filter 0.18s, background 0.16s;
+      cursor: pointer;
+    }
+
+    .join-btn:hover { background: #23272a; filter: brightness(1.07); }
+
+    /* TYPEWRITER EFFECT */
+    #typewriter-text::after {
+      content: '|';
+      display: inline;
+      animation: blink-caret 0.75s step-end infinite;
+      margin-left: 0.1em;
+      color: var(--caret-color, #23272a);
+    }
+
+    @keyframes blink-caret { from, to { opacity: 1; } 50% { opacity: 0; } }
+
+    @media (max-width: 750px) { .hero-title { font-size: 1.29rem; } .hero-desc { font-size: 1em; } }
+    @media (max-width: 430px) { .hero-title { font-size: 0.92rem; } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/>
+      </div>
+      <div class="search-bar-wrap">
+        <form class="search-bar" autocomplete="off" style="width:100%;">
+          <input type="text" placeholder="Search events..."/>
+          <span class="loc">Campus, IN</span>
+          <span class="icon">&#128269;</span>
+        </form>
+      </div>
+      <div class="navbar-actions">
+        <button class="lang-btn">&#127760; English</button>
+        <button class="login-link">Log in</button>
+        <button class="signup-btn">Sign up</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1 class="hero-title"><span id="typewriter-text"></span></h1>
+      <p class="hero-desc">
+        Whatever your interest, from hackathons to study groups or project sprints, thousands of classmates are ready to connect on Synapse. Teams are forming every day—sign up to join the action!
+      </p>
+      <button class="join-btn">Join Synapse</button>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const typewriter = document.getElementById('typewriter-text');
+      const words = [
+        {text: "Find your team, Build Your Dream.", color: "highlight-black"},
+        {text: "No more waiting, start creating.", color: "highlight-pink"},
+        {text: "Your vision takes flight, with a team that's just right.", color: "highlight-black"},
+        {text: "Ideas are lonely. Find them a crew.", color: "highlight-pink"},
+        {text: "Find a mate, innovate.", color: "highlight-black"},
+        {text: "Skill to skill, dream to thrill.", color: "highlight-pink"}
+      ];
+
+      let wordIndex = 0, charIndex = 0, isDeleting = false;
+
+      function type() {
+        const current = words[wordIndex];
+        typewriter.style.setProperty('--caret-color', current.color === 'highlight-pink' ? '#fa3c65' : '#23272a');
+
+        if (isDeleting) {
+          typewriter.innerHTML = `<span class="${current.color}">${current.text.substring(0, charIndex - 1)}</span>`;
+          charIndex--;
+        } else {
+          typewriter.innerHTML = `<span class="${current.color}">${current.text.substring(0, charIndex + 1)}</span>`;
+          charIndex++;
+        }
+
+        let speed = isDeleting ? 50 : 70; // faster typing and deleting
+
+        if (!isDeleting && charIndex === current.text.length) {
+          isDeleting = true;
+          setTimeout(type, 1000);
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          setTimeout(type, 300);
+        } else {
+          setTimeout(type, speed);
+        }
+      }
+
+      type();
+    });
+  </script>
+>>>>>>> dfc47cffcc6beeac7cd71ca1bf0fa9f197442f8f
 </body>
 </html>

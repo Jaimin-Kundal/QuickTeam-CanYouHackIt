@@ -137,14 +137,23 @@
 
     .signup-btn:hover { background: #282828; }
 
-    main { max-width: 1200px; margin: 0 auto; padding-top: 1px; }
+    main { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding-top: 1px; 
+    }
+
+    .hero-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2.6rem;
+      padding: 1.5rem 1.1rem 2rem 1.1rem;
+      gap: 2rem;
+    }
 
     .hero {
-      margin-top: 2.6rem;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 1.5rem 1.1rem 2rem 1.1rem;
+      flex: 1;
       color: #1f1f1f;
       text-align: left;
       max-width: 600px;
@@ -189,6 +198,18 @@
 
     .join-btn:hover { background: #23272a; filter: brightness(1.07); }
 
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
     /* TYPEWRITER EFFECT */
     #typewriter-text::after {
       content: '|';
@@ -200,8 +221,36 @@
 
     @keyframes blink-caret { from, to { opacity: 1; } 50% { opacity: 0; } }
 
-    @media (max-width: 750px) { .hero-title { font-size: 1.29rem; } .hero-desc { font-size: 1em; } }
-    @media (max-width: 430px) { .hero-title { font-size: 0.92rem; } }
+    /* Responsive design */
+    @media (max-width: 900px) {
+      .hero-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .hero {
+        max-width: 100%;
+        text-align: center;
+      }
+      
+      .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    @media (max-width: 750px) { 
+      .hero-title { font-size: 2rem; } 
+      .hero-desc { font-size: 1em; } 
+    }
+    
+    @media (max-width: 550px) { 
+      .hero-title { font-size: 1.7rem; } 
+    }
+    
+    @media (max-width: 430px) { 
+      .hero-title { font-size: 1.5rem; } 
+    }
   </style>
 </head>
 <body>
@@ -209,7 +258,7 @@
   <header>
     <nav class="navbar">
       <div class="logo">
-        <img src="/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/>
+        <a href="#"><img src="/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/></a>
       </div>
       <div class="search-bar-wrap">
         <form class="search-bar" autocomplete="off" style="width:100%;">
@@ -219,22 +268,31 @@
         </form>
       </div>
       <div class="navbar-actions">
-        <button class="lang-btn">&#127760; English</button>
-        <button class="login-link">Log in</button>
-        <button class="signup-btn">Sign up</button>
+        <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+        <a href="/about.html"><button class="login-link">About Us</button></a>
+        <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
       </div>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <h1 class="hero-title"><span id="typewriter-text"></span></h1>
-      <p class="hero-desc">
-        Whatever your interest, from hackathons to study groups or project sprints, thousands of classmates are ready to connect on Synapse. Teams are forming every day—sign up to join the action!
-      </p>
-      <button class="join-btn">Join Synapse</button>
-    </section>
+    <div class="hero-container">
+      <section class="hero">
+        <h1 class="hero-title"><span id="typewriter-text"></span></h1>
+        
+        <p class="hero-desc">
+          Whatever your interest, from hackathons to study groups or project sprints, thousands of classmates are ready to connect on Synapse. Teams are forming every day—sign up to join the action!
+        </p>
+        
+        <a href="/SignUp_Page.html"><button class="join-btn">Join Synapse</button></a>
+      </section>
+      
+      <section class="hero-image">
+        <img src="/doodle.png" alt="Collaboration illustration">
+      </section>
+    </div>
   </main>
+  
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -6,6 +6,8 @@
   <title>Synapse - Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root { --pink:#fa3c65; }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -13,69 +15,38 @@
       justify-content: center;
       align-items: center;
       font-family: 'Inter', Arial, sans-serif;
-      background: #f8f9fb;
       color: #222;
+      background: url("Background.png") no-repeat center center fixed;
+      background-size: cover; 
       position: relative;
       overflow: hidden;
     }
 
-    /* Abstract blobs */
+    /* Decorative blobs */
     .blob {
       position: absolute;
       border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
       z-index: -1;
-      opacity: 0.22;
+      opacity: .22;
     }
-    .blob1 {
-      width: 300px;
-      height: 280px;
-      background: #fa3c65;
-      top: -80px;
-      left: -100px;
-      transform: rotate(25deg);
-    }
-    .blob2 {
-      width: 240px;
-      height: 260px;
-      background: #000;
-      bottom: -100px;
-      right: -60px;
-      transform: rotate(-15deg);
-    }
-    .blob3 {
-      width: 200px;
-      height: 200px;
-      background: #555;
-      top: 40%;
-      left: -70px;
-      transform: rotate(40deg);
-    }
-    .blob4 {
-      width: 150px;
-      height: 180px;
-      background: #999;
-      bottom: 20%;
-      right: 30%;
-      transform: rotate(70deg);
-    }
+    .blob1 { width:300px; height:280px; background:var(--pink); top:-80px; left:-100px; transform:rotate(25deg) }
+    .blob2 { width:240px; height:260px; background:#000; bottom:-100px; right:-60px; transform:rotate(-15deg) }
+    .blob3 { width:200px; height:200px; background:#555; top:40%; left:-70px; transform:rotate(40deg) }
+    .blob4 { width:150px; height:180px; background:#999; bottom:20%; right:30%; transform:rotate(70deg) }
 
-    /* Full circle in top-right */
     .circle-top-right {
-      width: 240px;
-      height: 240px;
-      background: #fa3c65;
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      border-radius: 50%;
-      z-index: -1;
-      opacity: 0.35;
+      width:240px; height:240px; background:var(--pink);
+      position:absolute; top:-100px; right:-100px; border-radius:50%;
+      z-index:-1; opacity:.35;
     }
 
+    /* Login card */
     .login-card {
-      background: #fff;
+      background: rgba(255,255,255,0.42); /* ✅ semi-transparent white */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 1.4rem;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
       padding: 2.5rem 2rem;
       max-width: 420px;
       width: 100%;
@@ -84,47 +55,45 @@
     }
 
     .login-title {
-      font-family: 'Montserrat', Arial, sans-serif;
+      font-family:'Montserrat', Arial, sans-serif;
       font-weight: 900;
       font-size: 1.8rem;
       margin-bottom: 2rem;
     }
-    .login-title span {
-      color: #fa3c65;
-    }
+    .login-title span { color: var(--pink); }
 
+    /* Inputs */
     .input-field {
       position: relative;
       margin-bottom: 1.4rem;
       text-align: left;
     }
     .input-field label {
-      font-size: 0.9rem;
+      font-size: .9rem;
       font-weight: 600;
       color: #333;
       display: block;
-      margin-bottom: 0.3rem;
+      margin-bottom: .3rem;
     }
-
     .input-field input {
       width: 100%;
-      padding: 0.6rem 0;
+      padding: .6rem 0;
       border: none;
-      border-bottom: 2px solid #fa3c65;
+      border-bottom: 2px solid var(--pink);
       font-size: 1rem;
       font-family: inherit;
       outline: none;
       background: transparent;
-      transition: all 0.3s ease;
+      transition: all .3s ease;
     }
-
     .input-field input:focus,
     .input-field input:not(:placeholder-shown) {
-      border: 2px solid #fa3c65;
-      border-radius: 0.6rem;
-      padding: 0.8rem 1rem;
+      border: 2px solid var(--pink);
+      border-radius: .6rem;
+      padding: .8rem 1rem;
     }
 
+    /* Button */
     .login-btn {
       padding: 1rem;
       font-size: 1rem;
@@ -135,29 +104,25 @@
       border-radius: 2rem;
       cursor: pointer;
       width: 100%;
-      margin-top: 0.8rem;
-      transition: background 0.2s ease;
+      margin-top: .8rem;
+      transition: background .2s ease;
     }
-    .login-btn:hover {
-      background: #232323;
-    }
+    .login-btn:hover { background: #232323; }
 
+    /* Bottom text */
     .alt-action {
       margin-top: 1rem;
-      font-size: 0.92rem;
+      font-size: .92rem;
     }
     .alt-action a {
-      color: #fa3c65;
+      color: var(--pink);
       font-weight: 600;
       text-decoration: none;
     }
-    .alt-action a:hover {
-      text-decoration: underline;
-    }
+    .alt-action a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <!-- Curved blobs -->
   <div class="blob blob1"></div>
   <div class="blob blob2"></div>
   <div class="blob blob3"></div>
@@ -177,9 +142,7 @@
       </div>
       <button type="submit" class="login-btn">Log In</button>
     </form>
-    <p class="alt-action">
-      Don’t have an account? <a href="signup.html">Sign up</a>
-    </p>
+    <p class="alt-action">Don’t have an account? <a href="/SignUp_Page.html">Sign up</a></p>
   </div>
 </body>
 </html>

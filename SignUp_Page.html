@@ -13,53 +13,24 @@
       justify-content: center;
       align-items: center;
       font-family: 'Inter', Arial, sans-serif;
-      background: #f8f9fb;
+      background: url("Background.png") no-repeat center center fixed;
+      background-size: cover;
       color: #222;
       position: relative;
       overflow: hidden;
     }
 
-    /* Abstract blobs */
     .blob {
       position: absolute;
       border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
       z-index: -1;
       opacity: 0.22;
     }
-    .blob1 {
-      width: 300px;
-      height: 280px;
-      background: #fa3c65;
-      top: -80px;
-      left: -100px;
-      transform: rotate(25deg);
-    }
-    .blob2 {
-      width: 240px;
-      height: 260px;
-      background: #000;
-      bottom: -100px;
-      right: -60px;
-      transform: rotate(-15deg);
-    }
-    .blob3 {
-      width: 200px;
-      height: 200px;
-      background: #555;
-      top: 40%;
-      left: -70px;
-      transform: rotate(40deg);
-    }
-    .blob4 {
-      width: 150px;
-      height: 180px;
-      background: #999;
-      bottom: 20%;
-      right: 30%;
-      transform: rotate(70deg);
-    }
+    .blob1 { width: 300px; height: 280px; background: #fa3c65; top: -80px; left: -100px; transform: rotate(25deg); }
+    .blob2 { width: 240px; height: 260px; background: #000; bottom: -100px; right: -60px; transform: rotate(-15deg); }
+    .blob3 { width: 200px; height: 200px; background: #555; top: 40%; left: -70px; transform: rotate(40deg); }
+    .blob4 { width: 150px; height: 180px; background: #999; bottom: 20%; right: 30%; transform: rotate(70deg); }
 
-    /* Full circle in top-right */
     .circle-top-right {
       width: 240px;
       height: 240px;
@@ -73,7 +44,9 @@
     }
 
     .signup-card {
-      background: #fff;
+      background: rgba(255,255,255,0.42); /* ✅ semi-transparent white */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 1.4rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.1);
       padding: 2.5rem 2rem;
@@ -89,9 +62,7 @@
       font-size: 1.8rem;
       margin-bottom: 2rem;
     }
-    .signup-title span {
-      color: #fa3c65;
-    }
+    .signup-title span { color: #fa3c65; }
 
     .input-field {
       position: relative;
@@ -105,7 +76,6 @@
       display: block;
       margin-bottom: 0.3rem;
     }
-
     .input-field input {
       width: 100%;
       padding: 0.6rem 0;
@@ -117,7 +87,6 @@
       background: transparent;
       transition: all 0.3s ease;
     }
-
     .input-field input:focus,
     .input-field input:not(:placeholder-shown) {
       border: 2px solid #fa3c65;
@@ -138,9 +107,7 @@
       margin-top: 0.8rem;
       transition: background 0.2s ease;
     }
-    .signup-btn:hover {
-      background: #232323;
-    }
+    .signup-btn:hover { background: #232323; }
 
     .alt-action {
       margin-top: 1rem;
@@ -151,9 +118,7 @@
       font-weight: 600;
       text-decoration: none;
     }
-    .alt-action a:hover {
-      text-decoration: underline;
-    }
+    .alt-action a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -190,7 +155,7 @@
       <button type="submit" class="signup-btn">Sign Up</button>
     </form>
     <p class="alt-action">
-      Already have an account? <a href="login.html">Log in</a>
+      Already have an account? <a href="/login_Page.html">Log in</a>
     </p>
   </div>
 </body>

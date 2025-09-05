@@ -20,13 +20,6 @@
     <button type="submit" class="join-btn">Send Request</button>
   </form>
 </main>
-
-<script>
-document.getElementById("joinForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  alert(`Request sent!\nName: ${this.name.value}\nEmail: ${this.email.value}`);
-  this.reset();
-});
-</script>
+ <script src="js/request.js"></script>
 </body>
 </html>

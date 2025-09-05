@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Synapse - Icebreaker Minigame</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root { --pink:#fa3c65; }
+
+body {
+    margin:0; padding:0;
+    font-family:'Inter', Arial, sans-serif;
+    background: url("Background.png") no-repeat center center fixed;
+    background-size: cover;
+    min-height:100vh;
+    display:flex; justify-content:center; align-items:center;
+    color:#222;
+}
+
+.minigame-container {
+    background: rgba(255,255,255,0.42);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.minigame-title {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.minigame-title span { color: var(--pink); }
+
+.minigame-subtitle {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 2rem;
+}
+
+/* Flashcard design */
+.flashcard-wrapper {
+    perspective: 1500px;
+    width: 100%;
+    max-width: 500px;
+    height: 400px; /* Increased height for more room */
+    margin-bottom: 2rem;
+}
+
+.flashcard {
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 1.5rem;
+    cursor:pointer;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+.flashcard.flipped { transform: rotateY(180deg); }
+
+.flashcard-front, .flashcard-back {
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:1.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:2rem;
+    box-sizing:border-box;
+    transition: all 0.5s ease;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(250, 60, 101, 0.3);
+}
+
+.flashcard-back { transform: rotateY(180deg); }
+
+.card-question {
+    font-family:'Montserrat', sans-serif;
+    font-weight:700;
+    font-size:1.4rem;
+    margin-bottom:1.5rem;
+    color:#222;
+    text-align:center;
+}
+
+.options-container {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    width:100%;
+    align-items:center;
+    justify-content:center;
+}
+
+.option-card {
+    background: rgba(250, 60, 101, 0.1);
+    border: 2px solid var(--pink);
+    border-radius: 1.2rem;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor:pointer;
+    transition: all 0.3s ease;
+    text-align:center;
+    width: 90%;
+    max-width: 350px; /* Increased max-width for options */
+    box-shadow: inset 0 0 8px rgba(255,255,255,0.2);
+}
+
+.option-card:hover {
+    background: rgba(250, 60, 101, 0.25);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.option-card.selected {
+    background: var(--pink);
+    color:#fff;
+    border-color: var(--pink);
+    box-shadow: 0 6px 20px rgba(250,60,101,0.3);
+}
+
+.next-btn {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    background: var(--pink);
+    color:#fff;
+    border:none;
+    border-radius:2rem;
+    cursor:pointer;
+    box-shadow: 0 4px 15px rgba(250,60,101,0.2);
+    margin-top:1rem;
+}
+
+.next-btn:hover { background:#e2355c; }
+
+.progress-bar {
+    width:100%;
+    height:10px;
+    background:#ddd;
+    border-radius:5px;
+    overflow:hidden;
+    margin-top:1.5rem;
+}
+
+.progress { height:100%; width:0%; background: var(--pink); transition: width 0.3s ease-in-out; }
+
+@media(max-width:600px){
+    .minigame-title{ font-size:1.7rem; }
+    .minigame-subtitle{ font-size:0.9rem; }
+    .card-question{ font-size:1.2rem; }
+    .flashcard-wrapper{ height:350px; } /* Adjusted for smaller screens */
+    .option-card { max-width: 90%; } /* Ensure options are still responsive */
+}
+</style>
+</head>
+<body>
+
+<div class="minigame-container">
+    <h1 class="minigame-title">Icebreaker Minigame</h1>
+    <p class="minigame-subtitle">Answer a few fun questions to check your team compatibility!</p>
+
+    <div class="flashcard-wrapper">
+        <div class="flashcard" id="minigame-card">
+            <div class="flashcard-front">
+                <p class="card-question" id="card-question"></p>
+            </div>
+            <div class="flashcard-back">
+                <p class="card-question" id="card-question-back"></p>
+                <div class="options-container" id="options-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="next-btn" id="next-btn">Next</button>
+
+    <div class="progress-bar">
+        <div class="progress" id="progress-bar"></div>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { prompt:"If you were a programming language, which one?", options:["Python","JavaScript","C++","Go"] },
+    { prompt:"Which coding environment do you prefer?", options:["VS Code","IntelliJ","Vim","Sublime"] },
+    { prompt:"Frontend, Backend, or Full-stack?", options:["Frontend","Backend","Full-stack","All of the above"] },
+    { prompt:"Preferred team role?", options:["Leader","Support","Innovator","Tester"] },
+    { prompt:"Favorite type of project?", options:["Web App","Mobile App","AI","Game Development"] }
+];
+
+let currentQuestionIndex = -1; // -1 means game hasn’t started
+let selectedAnswer = null;
+const answers = [];
+
+const flashcard = document.getElementById('minigame-card');
+const questionFront = document.getElementById('card-question');
+const questionBack = document.getElementById('card-question-back');
+const nextButton = document.getElementById('next-btn');
+const progressBar = document.getElementById('progress-bar');
+const optionsContainer = document.getElementById('options-container');
+
+function showOptions(options){
+    optionsContainer.innerHTML = '';
+    selectedAnswer = null;
+    options.forEach(opt => {
+        const btn = document.createElement('div');
+        btn.className = 'option-card';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+            selectedAnswer = opt;
+            document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+        optionsContainer.appendChild(btn);
+    });
+}
+
+function updateCard(){
+    if(currentQuestionIndex === -1){
+        // Initial state before starting
+        questionFront.textContent = "Click start to begin!";
+        questionBack.textContent = "";
+        flashcard.classList.remove('flipped');
+        optionsContainer.innerHTML = '';
+        progressBar.style.width = '0%';
+        nextButton.textContent = "Start Game";
+        return;
+    }
+
+    if(currentQuestionIndex < questions.length){
+        const q = questions[currentQuestionIndex];
+        questionFront.textContent = q.prompt;
+        questionBack.textContent = q.prompt;
+        showOptions(q.options);
+        progressBar.style.width = ${((currentQuestionIndex + 1)/questions.length) * 100}%;
+        nextButton.textContent = "Next";
+    } else {
+        questionFront.textContent = "All done! Check your compatibility results soon!";
+        questionBack.textContent = "";
+        flashcard.classList.remove('flipped');
+        optionsContainer.innerHTML = '';
+        nextButton.style.display = 'none';
+        progressBar.style.width = '100%';
+        console.log("User answers:", answers); // You can send to Firebase
+    }
+}
+
+nextButton.addEventListener('click', () => {
+    // Prevent moving to the next question if no answer is selected
+    if (currentQuestionIndex > -1 && selectedAnswer === null) {
+        alert("Please select an option before proceeding.");
+        return;
+    }
+    
+    if(selectedAnswer) answers.push(selectedAnswer); // store previous answer
+    selectedAnswer = null; // reset selection
+
+    if(currentQuestionIndex === -1){
+        // Start game: show first question
+        currentQuestionIndex = 0;
+        flashcard.classList.add('flipped');
+        setTimeout(updateCard, 300);
+    } else if(currentQuestionIndex < questions.length - 1){
+        // Show next question
+        currentQuestionIndex++;
+        flashcard.classList.remove('flipped');
+        setTimeout(() => {
+            updateCard();
+            flashcard.classList.add('flipped');
+        }, 300);
+    } else {
+        // Last question done
+        currentQuestionIndex++;
+        updateCard();
+    }
+});
+
+updateCard(); // initialize
+
+</script>
+
+</body>
+</html>

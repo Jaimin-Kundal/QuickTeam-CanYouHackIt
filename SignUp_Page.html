@@ -17,7 +17,7 @@
 
   <div class="signup-card">
     <h2 class="signup-title">Join <span>Synapse</span></h2>
-    <form>
+    <form id="signupForm">
       <div class="input-field">
         <label for="fname">First Name</label>
         <input type="text" id="fname" placeholder=" " required>
@@ -44,5 +44,65 @@
       Already have an account? <a href="/login_Page.html">Log in</a>
     </p>
   </div>
+
+  <!-- Firebase SDK via CDN -->
+  <script type="module">
+    // ✅ Import Firebase modules from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+  authDomain: "synapse-ee716.firebaseapp.com",
+  projectId: "synapse-ee716",
+  storageBucket: "synapse-ee716.firebasestorage.app",
+  messagingSenderId: "894940754670",
+  appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+  measurementId: "G-PW7HGF2LTE"
+};
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Signup form handler
+    const signupForm = document.getElementById("signupForm");
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fname = document.getElementById("fname").value.trim();
+      const lname = document.getElementById("lname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        // ✅ Create user in Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // ✅ Save additional info in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          firstName: fname,
+          lastName: lname,
+          email: email,
+          createdAt: new Date()
+        });
+
+        alert("Signup successful! 🎉");
+        window.location.href = "/index.html"; // Redirect after signup
+      } catch (err) {
+        console.error(err);
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
 </body>
 </html>

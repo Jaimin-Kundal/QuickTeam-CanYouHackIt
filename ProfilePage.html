@@ -7,7 +7,7 @@
   <title>Synapse - Profile</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap"
     rel="stylesheet">
-   <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/profile.css">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
   <div class="profile-card">
     <h2 class="profile-title">Your <span>Profile</span></h2>
 
-    <!-- ✅ Profile Picture -->
+    <!-- Profile Picture -->
     <div class="profile-pic-wrapper">
       <img src="images/pplogo.jpg" alt="Profile Picture" id="preview" class="profile-pic">
       <input type="file" id="profile-pic" accept="image/*" class="profile-pic-input">
@@ -39,7 +39,7 @@
 
       <div class="input-field">
         <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="name@example.com">
+        <input type="email" id="email" required placeholder="name@example.com" readonly>
         <div class="error-message">Enter a valid email address.</div>
       </div>
 
@@ -89,7 +89,87 @@
       <button type="submit" class="save-btn">Save Profile</button>
     </form>
   </div>
-   <script src="js/profile.js"></script>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // ✅ Firebase CDN imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    // 🔑 Your Firebase config (replace with your web app credentials)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+      authDomain: "synapse-ee716.firebaseapp.com",
+      projectId: "synapse-ee716",
+      storageBucket: "synapse-ee716.appspot.com",
+      messagingSenderId: "894940754670",
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+      measurementId: "G-PW7HGF2LTE"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const profileForm = document.getElementById("profileForm");
+
+    // ✅ Check if user is logged in and fetch profile data
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "/login_Page.html";
+      } else {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("fullname").value = data.firstName + " " + data.lastName;
+          document.getElementById("email").value = data.email;
+          document.getElementById("dob").value = data.dob || "";
+          document.getElementById("phone").value = data.phone || "";
+          document.getElementById("location").value = data.location || "";
+          document.getElementById("bio").value = data.bio || "";
+          document.getElementById("skills").value = data.skills || "";
+          document.getElementById("achievements").value = data.achievements || "";
+          document.getElementById("teams").value = data.teams || "";
+          document.getElementById("experience").value = data.experience || "";
+        }
+      }
+    });
+
+    // ✅ Save profile data to Firestore
+    profileForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const fullname = document.getElementById("fullname").value.trim();
+      const [firstName, ...lastNameArr] = fullname.split(" ");
+      const lastName = lastNameArr.join(" ");
+
+      const profileData = {
+        firstName,
+        lastName,
+        email: document.getElementById("email").value.trim(),
+        dob: document.getElementById("dob").value,
+        phone: document.getElementById("phone").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        bio: document.getElementById("bio").value.trim(),
+        skills: document.getElementById("skills").value.trim(),
+        achievements: document.getElementById("achievements").value.trim(),
+        teams: document.getElementById("teams").value.trim(),
+        experience: document.getElementById("experience").value.trim()
+      };
+
+      try {
+        await setDoc(doc(db, "users", user.uid), profileData, { merge: true });
+        alert("Profile saved successfully! 🎉");
+      } catch (err) {
+        alert("Error saving profile: " + err.message);
+      }
+    });
+  </script>
 </body>
 
 </html>

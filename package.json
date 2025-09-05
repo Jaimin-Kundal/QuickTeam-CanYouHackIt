@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "firebase": "^12.2.1"
+  },
+  "name": "quickteam-canyouhackit",
+  "version": "1.0.0",
+  "description": "A collaboration platform built during the Intra-College Hackathon (organized by The Programming Club) to help students quickly find teammates for hackathons, matches, and study groups — ensuring ideas turn into action instead of fading due to lack of collaborators.",
+  "main": "supabase.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jaimin-Kundal/QuickTeam-CanYouHackIt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jaimin-Kundal/QuickTeam-CanYouHackIt/issues"
+  },
+  "homepage": "https://github.com/Jaimin-Kundal/QuickTeam-CanYouHackIt#readme"
+}

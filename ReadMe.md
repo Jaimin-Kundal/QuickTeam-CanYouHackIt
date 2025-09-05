@@ -1,0 +1,1 @@
+A collaboration platform built during the Intra-College Hackathon (organized by The Programming Club) to help students quickly find teammates for hackathons, matches, and study groups — ensuring ideas turn into action instead of fading due to lack of collaborators.

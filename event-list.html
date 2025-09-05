@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Team - Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <nav class="navbar">
+  <div class="logo">
+    <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/profile.jpg" alt="Profile" class="profile-img">
+    </div>
+  </div>
+</nav>
+
+  </header>
+
+<main>
+  <h2>Upcoming Events</h2>
+
+  <!-- Filter -->
+  <div style="text-align:center; margin-bottom:1.5rem;">
+    <label>Filter by Type: </label>
+    <select id="filterType">
+      <option value="all">All</option>
+      <option value="Hackathon">Hackathon</option>
+      <option value="AI/ML">AI/ML</option>
+      <option value="Frontend">Frontend</option>
+      <option value="Backend">Backend</option>
+      <option value="UI/UX">UI/UX</option>
+      <option value="Mobile">Mobile</option>
+    </select>
+  </div>
+
+  <div id="eventList"></div>
+</main>
+
+<script>
+const events = [
+  {id:1, name:"Hackathon 2025", date:"2025-10-15", slots:5, type:"Hackathon"},
+  {id:2, name:"AI/ML Sprint", date:"2025-10-20", slots:3, type:"AI/ML"},
+  {id:3, name:"Frontend Frenzy", date:"2025-11-05", slots:4, type:"Frontend"},
+  {id:4, name:"Backend Bonanza", date:"2025-11-10", slots:2, type:"Backend"},
+  {id:5, name:"Design Sprint", date:"2025-11-12", slots:6, type:"UI/UX"},
+  {id:6, name:"Mobile Hack", date:"2025-11-15", slots:3, type:"Mobile"},
+  {id:7, name:"AI Challenge", date:"2025-11-18", slots:5, type:"AI/ML"},
+  {id:8, name:"Fullstack Fest", date:"2025-11-20", slots:4, type:"Frontend"},
+  {id:9, name:"Cloud Wars", date:"2025-11-22", slots:2, type:"Backend"},
+  {id:10, name:"Game Jam", date:"2025-11-25", slots:3, type:"Frontend"},
+];
+
+const eventList = document.getElementById("eventList");
+const filter = document.getElementById("filterType");
+
+function displayEvents(eventsArray){
+  eventList.innerHTML = "";
+  eventsArray.forEach(event => {
+    const card = document.createElement("div");
+    card.className = "event-card";
+    card.innerHTML = `
+      <div>
+        <h3>${event.name}</h3>
+        <p>Date: ${event.date}</p>
+        <p>Remaining Slots: <span class="slots">${event.slots}</span></p>
+      </div>
+      <button onclick="goToDetails(${event.id})">View Details</button>
+    `;
+    eventList.appendChild(card);
+  });
+}
+
+filter.addEventListener("change", () => {
+  const selected = filter.value;
+  const filteredEvents = selected === "all" ? events : events.filter(e => e.type === selected);
+  displayEvents(filteredEvents);
+});
+
+displayEvents(events);
+
+function goToDetails(id) {
+  localStorage.setItem("selectedEventId", id);
+  window.location.href = "event-details.html";
+}
+</script>
+</body>
+</html>

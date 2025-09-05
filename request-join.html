@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request to Join Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="event-list.html" style="color:#fa3c65;">Quick Team</a></h1>
+</header>
+<main>
+  <h2 style="text-align:center; margin-bottom:1.5rem;">Request to Join Team</h2>
+  <form id="joinForm" style="max-width:500px; margin:0 auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 1px 6px rgba(0,0,0,0.08);">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea id="message" placeholder="Why do you want to join?" rows="4"></textarea>
+    <button type="submit" class="join-btn">Send Request</button>
+  </form>
+</main>
+
+<script>
+document.getElementById("joinForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  alert(`Request sent!\nName: ${this.name.value}\nEmail: ${this.email.value}`);
+  this.reset();
+});
+</script>
+</body>
+</html>

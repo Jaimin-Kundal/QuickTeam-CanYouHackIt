@@ -1,310 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Edit Profile - Synapse</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Inter', Arial, sans-serif;
-            background: url('/Background.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #222;
-            position: relative;
-            overflow-x: hidden;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synapse - Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', Arial, sans-serif;
+      background: url("Background.png") no-repeat center center fixed;
+      background-size: cover;
+      color: #222;
+      overflow: hidden;
+      /* ✅ background fixed */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
 
-        /* Abstract blobs */
-        .blob {
-            position: fixed;
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            z-index: -1;
-            opacity: 0.22;
-        }
-        .blob1 { width: 300px; height: 280px; background: #fa3c65; top: -80px; left: -100px; transform: rotate(25deg); }
-        .blob2 { width: 240px; height: 260px; background: #000; bottom: -100px; right: -60px; transform: rotate(-15deg); }
-        .blob3 { width: 200px; height: 200px; background: #555; top: 40%; left: -70px; transform: rotate(40deg); }
-        .blob4 { width: 150px; height: 180px; background: #999; bottom: 20%; right: 30%; transform: rotate(70deg); }
+    .blob {
+      position: absolute;
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      z-index: -1;
+      opacity: 0.22;
+    }
 
-        .profile-card {
-    background: rgba(255,255,255,0.42);   /* updated */
-    backdrop-filter: blur(12px);          /* glass effect */
-    -webkit-backdrop-filter: blur(12px);  /* safari support */
-    border-radius: 1.4rem;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    padding: 2.5rem 2rem;
-    max-width: 800px;
-    width: 100%;
-    z-index: 1;
-}
+    .blob1 {
+      width: 300px;
+      height: 280px;
+      background: #fa3c65;
+      top: -80px;
+      left: -100px;
+      transform: rotate(25deg);
+    }
 
-        .profile-title {
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 900;
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .profile-title span { color: #fa3c65; }
+    .blob2 {
+      width: 240px;
+      height: 260px;
+      background: #000;
+      bottom: -100px;
+      right: -60px;
+      transform: rotate(-15deg);
+    }
 
-        /* Input fields */
-        .input-field {
-            position: relative;
-            margin-bottom: 1.4rem;
-            text-align: left;
-        }
-        .input-field label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #333;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        .input-field input,
-        .input-field textarea {
-            width: 100%;
-            padding: 0.6rem 0;
-            border: none;
-            border-bottom: 2px solid #fa3c65;
-            font-size: 1rem;
-            font-family: inherit;
-            outline: none;
-            background: transparent;
-            transition: all 0.3s ease;
-        }
+    .blob3 {
+      width: 200px;
+      height: 200px;
+      background: #555;
+      top: 40%;
+      left: -70px;
+      transform: rotate(40deg);
+    }
 
-        /* Focus (before entry) → pink box */
-        .input-field input:focus,
-        .input-field textarea:focus {
-            border: 2px solid #fa3c65;
-            border-radius: 0.6rem;
-            padding: 0.8rem 1rem;
-        }
+    .blob4 {
+      width: 150px;
+      height: 180px;
+      background: #999;
+      bottom: 20%;
+      right: 30%;
+      transform: rotate(70deg);
+    }
 
-        /* After entry → pink underline */
-        .input-field input.has-content,
-        .input-field textarea.has-content {
-            border: none;
-            border-bottom: 2px solid #fa3c65;
-            border-radius: 0;
-            padding: 0.6rem 0;
-        }
+    .circle-top-right {
+      width: 240px;
+      height: 240px;
+      background: #fa3c65;
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      border-radius: 50%;
+      z-index: -1;
+      opacity: 0.35;
+    }
 
-        .btn-primary {
-            background-color: #111827;
-            color: #fff;
-            transition: background 0.2s ease;
-        }
-        .btn-primary:hover { background: #232323; }
+    .profile-card {
+      background: rgba(255, 255, 255, 0.42);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1.4rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      padding-bottom: 3.5rem;
+      /* ✅ extra space at bottom */
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      max-height: 80vh;
+      /* ✅ shorter card */
+      overflow-y: auto;
+      margin-bottom: 2rem;
+      /* ✅ guaranteed space below */
+    }
 
-        .tag {
-            background-color: #2EC4B6;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .tag:hover { background-color: #24A396; }
 
-        .section-header {
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 900;
-            color: #262626;
-        }
-    </style>
+    /* Optional: style scroll bar */
+    .profile-card::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .profile-card::-webkit-scrollbar-thumb {
+      background: #fa3c65;
+      border-radius: 4px;
+    }
+
+    .profile-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-title span {
+      color: #fa3c65;
+    }
+
+    /* ✅ Profile picture with pencil overlay */
+    .profile-pic-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fa3c65;
+      display: block;
+
+    }
+
+    .profile-pic-input {
+      display: none;
+    }
+
+    .edit-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 50%;
+      width: 40px;
+      /* adjust circle size */
+      height: 40px;
+      border: 2px solid #fa3c65;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      /* makes sure image stays inside circle */
+    }
+
+    .edit-icon img {
+      width: 100%;
+      /* image fills circle */
+      height: 100%;
+      object-fit: contain;
+      /* or cover, depending on your PNG */
+    }
+
+
+    .input-field {
+      position: relative;
+      margin-bottom: 1.4rem;
+      text-align: left;
+    }
+
+    .input-field label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .input-field input,
+    .input-field textarea {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 2px solid transparent;
+      /* invisible border initially */
+      border-bottom: 2px solid #fa3c65;
+      /* pink underline */
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
+      transition: all 0.3s ease;
+      resize: vertical;
+      box-sizing: border-box;
+      /* ✅ prevents overflow */
+      border-radius: 0.6rem;
+    }
+
+    /* On focus, show full pink box */
+    .input-field input:focus,
+    .input-field textarea:focus {
+      border: 2px solid #fa3c65;
+      background: rgba(250, 60, 101, 0.05);
+      /* optional subtle bg */
+    }
+
+    .error-message {
+      font-size: 0.8rem;
+      color: red;
+      display: none;
+      margin-top: 0.2rem;
+    }
+
+    .save-btn {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 2rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.8rem;
+      transition: background 0.2s ease;
+    }
+
+    .save-btn:hover {
+      background: #232323;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- Background Blobs -->
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="blob blob3"></div>
-    <div class="blob blob4"></div>
+  <!-- Curved blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="circle-top-right"></div>
 
-    <main class="flex-1 my-8 max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="profile-card">
-            <h1 class="profile-title">Create Your Profile</h1>
+  <div class="profile-card">
+    <h2 class="profile-title">Your <span>Profile</span></h2>
 
-            <!-- Profile Picture Section -->
-            <div class="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-6 sm:gap-10 mb-8 pb-8 border-b border-gray-200">
-                <div class="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md">
-                    <img id="profile-pic" src="https://placehold.co/128x128/FFC0CB/222?text=P" alt="Profile Picture" class="w-full h-full object-cover">
-                    <label for="profile-pic-input" class="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-md cursor-pointer -translate-y-1 translate-x-1 hover:bg-gray-100 transition-colors duration-200">
-                        <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
-                        </svg>
-                        <input type="file" id="profile-pic-input" class="hidden" accept="image/*">
-                    </label>
-                </div>
-                <div class="text-center sm:text-left">
-                    <h2 class="text-xl font-semibold mb-1">Your Profile Photo</h2>
-                    <p class="text-sm text-gray-500">
-                        Upload a photo of yourself.
-                    </p>
-                </div>
-            </div>
+    <!-- ✅ Profile Picture -->
+    <div class="profile-pic-wrapper">
+      <img src="/pplogo.jpg" alt="Profile Picture" id="preview" class="profile-pic">
+      <input type="file" id="profile-pic" accept="image/*" class="profile-pic-input">
+      <label for="profile-pic" class="edit-icon">
+        <img src="/pencillogo.jpg" alt="Edit">
+      </label>
+    </div>
 
-            <form id="profile-form">
-                <!-- Personal Information Section -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                    <div>
-                        <label for="full-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                        <input type="text" id="full-name" class="input-field w-full px-4 py-3" placeholder="John Doe">
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="email" class="input-field w-full px-4 py-3" placeholder="john.doe@example.com">
-                    </div>
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                        <input type="tel" id="phone" class="input-field w-full px-4 py-3" placeholder="+1 (555) 555-5555">
-                    </div>
-                    <div>
-                        <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                        <input type="date" id="dob" class="input-field w-full px-4 py-3">
-                    </div>
-                    <div class="col-span-1 sm:col-span-2">
-                        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                        <input type="text" id="location" class="input-field w-full px-4 py-3" placeholder="Campus, IN">
-                    </div>
-                    <div class="col-span-1 sm:col-span-2">
-                        <label for="bio" class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                        <textarea id="bio" rows="4" class="input-field w-full px-4 py-3" placeholder="Tell us about yourself and what you are looking for..."></textarea>
-                    </div>
-                </div>
+    <form id="profileForm" novalidate>
+      <div class="input-field">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" required pattern="^[A-Za-z ]{3,50}$" placeholder="John Doe">
+        <div class="error-message">Enter a valid full name (letters & spaces, 3–50 chars).</div>
+      </div>
 
-                <!-- Skills Section -->
-                <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Skills</label>
-                    <div id="skills-container" class="flex flex-wrap gap-2 mb-3"></div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="skill-input" class="input-field flex-1 px-4 py-3" placeholder="Add a new skill (e.g., Python, UI/UX)">
-                        <button type="button" id="add-skill-btn" class="btn-primary rounded-full px-5 py-3 text-sm font-semibold">Add</button>
-                    </div>
-                </div>
+      <div class="input-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="name@example.com">
+        <div class="error-message">Enter a valid email address.</div>
+      </div>
 
-                <!-- Achievements Section -->
-                <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Achievements</label>
-                    <div id="achievements-container" class="space-y-4"></div>
-                    <div class="flex items-center gap-2 mt-4">
-                        <input type="text" id="achievement-input" class="input-field flex-1 px-4 py-3" placeholder="e.g., Won First Place at Campus Hackathon 2024">
-                        <button type="button" id="add-achievement-btn" class="btn-primary rounded-full px-5 py-3 text-sm font-semibold">Add</button>
-                    </div>
-                </div>
-                
-                <!-- Experience and Teams Section -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                    <div>
-                        <label for="experience" class="block text-sm font-medium text-gray-700 mb-1">Experience</label>
-                        <textarea id="experience" rows="4" class="input-field w-full px-4 py-3" placeholder="Describe your relevant experience..."></textarea>
-                    </div>
-                    <div>
-                        <label for="previous-teams" class="block text-sm font-medium text-gray-700 mb-1">Previous Teams</label>
-                        <textarea id="previous-teams" rows="4" class="input-field w-full px-4 py-3" placeholder="List the names of previous teams or projects..."></textarea>
-                    </div>
-                </div>
+      <div class="input-field">
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required>
+        <div class="error-message">Please select a valid date of birth.</div>
+      </div>
 
-                <div class="flex justify-end pt-6 border-t border-gray-200">
-                    <button type="submit" class="btn-primary rounded-full px-8 py-3 font-semibold text-lg">Save Profile</button>
-                </div>
-            </form>
-        </div>
-    </main>
+      <div class="input-field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required pattern="^[0-9]{10}$" placeholder="9876543210">
+        <div class="error-message">Enter a valid 10-digit phone number.</div>
+      </div>
 
-    <script>
-        const profilePicInput = document.getElementById('profile-pic-input');
-        const profilePic = document.getElementById('profile-pic');
-        const skillsContainer = document.getElementById('skills-container');
-        const skillInput = document.getElementById('skill-input');
-        const addSkillBtn = document.getElementById('add-skill-btn');
-        const achievementsContainer = document.getElementById('achievements-container');
-        const achievementInput = document.getElementById('achievement-input');
-        const addAchievementBtn = document.getElementById('add-achievement-btn');
+      <div class="input-field">
+        <label for="location">Location</label>
+        <input type="text" id="location" required placeholder="City, Country">
+        <div class="error-message">Enter a valid location.</div>
+      </div>
 
-        // Handle profile picture preview
-        profilePicInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profilePic.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+      <div class="input-field">
+        <label for="bio">Bio</label>
+        <textarea id="bio" rows="3" maxlength="200" placeholder="Tell us about yourself..."></textarea>
+      </div>
 
-        // Function to create a tag
-        function createTag(text, container) {
-            if (!text.trim()) return;
-            const tag = document.createElement('span');
-            tag.className = 'tag rounded-full px-4 py-2 text-xs font-semibold flex items-center gap-1';
-            tag.innerHTML = `
-                <span>${text}</span>
-                <button type="button" class="tag-remove text-white opacity-80 hover:opacity-100 transition-opacity duration-200">
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
-            `;
-            container.appendChild(tag);
-            tag.querySelector('.tag-remove').addEventListener('click', () => tag.remove());
+      <div class="input-field">
+        <label for="skills">Skills</label>
+        <textarea id="skills" rows="2" placeholder="E.g., Python, Design, Leadership"></textarea>
+      </div>
+
+      <div class="input-field">
+        <label for="achievements">Achievements</label>
+        <textarea id="achievements" rows="2" placeholder="E.g., Hackathon Winner, Published Paper"></textarea>
+      </div>
+
+      <div class="input-field">
+        <label for="teams">Previous Teams</label>
+        <textarea id="teams" rows="2" placeholder="E.g., Robotics Club, Startup X"></textarea>
+      </div>
+
+      <div class="input-field">
+        <label for="experience">Experience</label>
+        <textarea id="experience" rows="3" placeholder="E.g., 2 years as Web Developer"></textarea>
+      </div>
+
+      <button type="submit" class="save-btn">Save Profile</button>
+    </form>
+  </div>
+
+  <script>
+    // ✅ Profile picture preview
+    const fileInput = document.getElementById("profile-pic");
+    const preview = document.getElementById("preview");
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+      }
+    });
+
+    // ✅ Validation handling
+    const form = document.getElementById("profileForm");
+    form.addEventListener("submit", (e) => {
+      let valid = true;
+      form.querySelectorAll("input[required]").forEach(field => {
+        const error = field.nextElementSibling;
+        if (!field.checkValidity()) {
+          error.style.display = "block";
+          valid = false;
+        } else {
+          if (error) error.style.display = "none";
         }
+      });
+      if (!valid) e.preventDefault();
+    });
 
-        // Add skills dynamically
-        addSkillBtn.addEventListener('click', () => {
-            createTag(skillInput.value, skillsContainer);
-            skillInput.value = '';
-        });
-        skillInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                createTag(skillInput.value, skillsContainer);
-                skillInput.value = '';
-            }
-        });
-
-        // Add achievements dynamically
-        addAchievementBtn.addEventListener('click', () => {
-            const achievementText = achievementInput.value.trim();
-            if (achievementText) {
-                const achievementItem = document.createElement('div');
-                achievementItem.className = 'flex items-start gap-3 p-4 bg-gray-50 rounded-lg';
-                achievementItem.innerHTML = `
-                    <svg class="w-5 h-5 mt-1 text-[#2EC4B6] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                    <p class="text-sm font-medium text-gray-800">${achievementText}</p>
-                    <button type="button" class="ml-auto text-gray-400 hover:text-red-500 transition-colors duration-200 achievement-remove">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    </button>
-                `;
-                achievementsContainer.appendChild(achievementItem);
-                achievementInput.value = '';
-                achievementItem.querySelector('.achievement-remove').addEventListener('click', () => achievementItem.remove());
-            }
-        });
-        achievementInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addAchievementBtn.click();
-            }
-        });
-
-        // Dynamic field styling
-        const allInputFields = document.querySelectorAll('.input-field input, .input-field textarea');
-        allInputFields.forEach(field => {
-            field.addEventListener('blur', () => {
-                if (field.value.trim() !== '') {
-                    field.classList.add('has-content');
-                } else {
-                    field.classList.remove('has-content');
-                }
-            });
-        });
-    </script>
+    // ✅ Live validation
+    form.querySelectorAll("input, textarea").forEach(field => {
+      field.addEventListener("input", () => {
+        const error = field.nextElementSibling;
+        if (error && field.checkValidity()) {
+          error.style.display = "none";
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>

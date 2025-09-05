@@ -44,7 +44,7 @@
     }
 
     .signup-card {
-      background: rgba(255,255,255,0.42); /* ✅ semi-transparent white */
+      background: rgba(255,255,255,0.42); /* semi-transparent white */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-radius: 1.4rem;
@@ -64,6 +64,7 @@
     }
     .signup-title span { color: #fa3c65; }
 
+    /* ✅ Updated input style (same as profile page) */
     .input-field {
       position: relative;
       margin-bottom: 1.4rem;
@@ -78,20 +79,20 @@
     }
     .input-field input {
       width: 100%;
-      padding: 0.6rem 0;
-      border: none;
-      border-bottom: 2px solid #fa3c65;
+      padding: 0.8rem 1rem;
+      border: 2px solid transparent;     /* start invisible */
+      border-bottom: 2px solid #fa3c65;  /* pink underline */
       font-size: 1rem;
       font-family: inherit;
       outline: none;
       background: transparent;
       transition: all 0.3s ease;
+      box-sizing: border-box;            /* prevents overflow */
     }
     .input-field input:focus,
     .input-field input:not(:placeholder-shown) {
-      border: 2px solid #fa3c65;
+      border: 2px solid #fa3c65;    /* full box highlight */
       border-radius: 0.6rem;
-      padding: 0.8rem 1rem;
     }
 
     .signup-btn {

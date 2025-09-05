@@ -42,7 +42,7 @@
 
     /* Login card */
     .login-card {
-      background: rgba(255,255,255,0.42); /* ✅ semi-transparent white */
+      background: rgba(255,255,255,0.42); /* semi-transparent white */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-radius: 1.4rem;
@@ -62,7 +62,7 @@
     }
     .login-title span { color: var(--pink); }
 
-    /* Inputs */
+    /* ✅ Fixed input style (same as profile/signup) */
     .input-field {
       position: relative;
       margin-bottom: 1.4rem;
@@ -77,20 +77,20 @@
     }
     .input-field input {
       width: 100%;
-      padding: .6rem 0;
-      border: none;
-      border-bottom: 2px solid var(--pink);
+      padding: 0.8rem 1rem;
+      border: 2px solid transparent;     /* reserve space */
+      border-bottom: 2px solid var(--pink); /* underline */
       font-size: 1rem;
       font-family: inherit;
       outline: none;
       background: transparent;
       transition: all .3s ease;
+      box-sizing: border-box;            /* prevent overflow */
     }
     .input-field input:focus,
     .input-field input:not(:placeholder-shown) {
-      border: 2px solid var(--pink);
+      border: 2px solid var(--pink);    /* full pink box */
       border-radius: .6rem;
-      padding: .8rem 1rem;
     }
 
     /* Button */

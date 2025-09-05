@@ -13,6 +13,7 @@
     <h1 class="minigame-title">Icebreaker Minigame</h1>
     <p class="minigame-subtitle">Answer a few fun questions to check your team compatibility!</p>
 
+    <!-- Flashcards -->
     <div class="flashcard-wrapper">
         <div class="flashcard" id="minigame-card">
             <div class="flashcard-front">
@@ -30,6 +31,17 @@
     <div class="progress-bar">
         <div class="progress" id="progress-bar"></div>
     </div>
+
+    <!-- Compatibility Results (hidden initially) -->
+    <div class="compatibility-result" id="compatibility-result" style="display:none;">
+        <p id="compatibility-percentage" style="font-size:2rem; font-weight:700; margin-bottom:1rem;"></p>
+        <div class="results-progress-bar">
+            <div class="results-progress" id="results-progress"></div>
+        </div>
+        <p id="compatibility-message"></p>
+        <button class="next-btn" id="restart-btn">Play Again</button>
+    </div>
+
 </div>
 
 <script src="/js/minigame.js"></script>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Details</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/profile.jpg" alt="Profile" class="profile-img">
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="event-info">
+    <h2 id="eventName"></h2>
+    <table class="event-table">
+      <tr>
+        <td>Date</td>
+        <td id="eventDate"></td>
+      </tr>
+      <tr>
+        <td>Remaining Slots</td>
+        <td id="eventSlots"></td>
+      </tr>
+      <tr>
+        <td>Team Members</td>
+        <td>
+          <div class="table-team-members" id="teamMembers"></div>
+        </td>
+      </tr>
+      <tr>
+      <td colspan="2" style="text-align:center;">
+        <button class="join-btn" id="requestBtn">Request to Join</button>
+      </td>
+    </tr>
+    </table>
+  </div>
+
+  
+</main>
+
+<script>
+const eventsData = [
+  {id:1, name:"Hackathon 2025", date:"2025-10-15", slots:5, team:["Megha","Jaimin","Bhavya"]},
+  {id:2, name:"AI/ML Sprint", date:"2025-10-20", slots:3, team:["Jaimin","Bhavya"]},
+  {id:3, name:"Frontend Frenzy", date:"2025-11-05", slots:4, team:["Megha","Maritreye"]},
+  {id:4, name:"Backend Bonanza", date:"2025-11-10", slots:2, team:["Jaimin","Bhavya"]},
+];
+
+const eventId = parseInt(localStorage.getItem("selectedEventId"));
+const event = eventsData.find(e => e.id === eventId);
+
+document.getElementById("eventName").innerText = event.name;
+document.getElementById("eventDate").innerText = event.date;
+document.getElementById("eventSlots").innerText = event.slots;
+
+const teamDiv = document.getElementById("teamMembers");
+event.team.forEach(member => {
+  const div = document.createElement("div");
+  div.className = "member";
+  div.innerHTML = `<img src="images/${member.toLowerCase()}.jpg" alt="${member}"><h4>${member}</h4>`;
+  teamDiv.appendChild(div);
+});
+
+document.getElementById("requestBtn").addEventListener("click", () => {
+  if(event.slots > 0){
+    event.slots--;
+    document.getElementById("eventSlots").innerText = event.slots;
+    alert("Request sent successfully!");
+  } else {
+    alert("Sorry, no slots remaining!");
+  }
+});
+</script>
+</body>
+</html>

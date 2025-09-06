@@ -43,13 +43,13 @@ h2, h3, h4, p { margin: 0; }
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 1.5rem;
+  gap: 2rem;
   margin: 0;
   padding: 0;
 }
 
 .nav-links li a {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 400;
   color: #222;
   transition: 0.2s;
@@ -205,6 +205,36 @@ button:hover { opacity: 0.85; }
   font-weight: 600;
 }
 
+.event-controls {
+  display: flex;
+  justify-content: space-between; /* button left, filter right */
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.create-btn {
+  display: inline-block;
+  background-color: var(--pink);
+  color: black;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.create-btn:hover {
+  background-color: #fa3c65;
+}
+
+.filter select {
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+
 /* JOIN BUTTON */
 .join-btn {
   background: #fa3c65;
@@ -216,7 +246,6 @@ button:hover { opacity: 0.85; }
   margin: 2rem auto;
   font-size: 1rem;
 }
-
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {

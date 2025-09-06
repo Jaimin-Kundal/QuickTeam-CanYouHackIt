@@ -35,6 +35,7 @@
       <!-- ✅ Navbar Actions (right, dynamic with Firebase) -->
       <div class="navbar-actions" id="navbarActions">
         <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+        <a href="/event-list.html"><button class="login-link">Events</button></a>
         <a href="/about.html"><button class="login-link">About Us</button></a>
         <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
       </div>
@@ -84,6 +85,7 @@
         // ✅ Logged in → Profile + About Us + Logout
         navbarActions.innerHTML = `
           <a href="/profile.html"><button class="signup-btn">Profile</button></a>
+          <a href="/event-list.html"><button class="login-link">Events</button></a>
           <a href="/about.html"><button class="login-link">About Us</button></a>
           <button class="login-link" id="logoutBtn">Logout</button>
         `;
@@ -95,6 +97,7 @@
         // ❌ Not logged in → Login + About Us + Signup
         navbarActions.innerHTML = `
           <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+          <a href="/event-list.html"><button class="login-link">Events</button></a>
           <a href="/about.html"><button class="login-link">About Us</button></a>
           <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
         `;

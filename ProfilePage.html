@@ -1,84 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Synapse - Profile</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/profile.css">
+  <style>
+    /* Minimal inline styles so the page is usable if your CSS is missing */
+    body { font-family: 'Inter', system-ui, sans-serif; background:#f6f7fb; margin:0; padding:40px; display:flex; justify-content:center; }
+    .profile-card { width:720px; background:rgba(255,255,255,0.98); border-radius:12px; padding:28px; box-shadow:0 8px 32px rgba(0,0,0,0.08); }
+    .profile-title { font-family:'Montserrat',sans-serif; font-weight:900; margin:0 0 18px; }
+    .profile-pic-wrapper { display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+    .profile-pic { width:96px; height:96px; object-fit:cover; border-radius:12px; border:2px solid #eee; }
+    .profile-pic-input { display:block; }
+    .input-field { margin-bottom:12px; }
+    .input-field label { display:block; font-weight:600; margin-bottom:6px; font-size:0.95rem; color:#333; }
+    .input-field input, .input-field textarea { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #ddd; font-size:0.95rem; box-sizing:border-box; }
+    .save-btn { margin-top:10px; padding:10px 14px; background:#111827; color:#fff; border:none; border-radius:10px; cursor:pointer; font-weight:700; }
+    .logout-btn { margin-left:12px; padding:8px 12px; background:#ff5757; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; }
+    .top-actions { display:flex; align-items:center; gap:10px; justify-content:flex-end; margin-bottom:8px; }
+    .msg { margin-top:10px; color: #0a7; } .err { color:#d00; }
+  </style>
 </head>
-
 <body>
-  <!-- Curved blobs -->
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
-  <div class="blob blob3"></div>
-  <div class="blob blob4"></div>
-  <div class="circle-top-right"></div>
+  <div class="profile-card" role="main">
+    <div class="top-actions">
+      <button id="logoutBtn" class="logout-btn" style="display:none">Logout</button>
+    </div>
 
-  <div class="profile-card">
-    <h2 class="profile-title">Your <span>Profile</span></h2>
+    <h2 class="profile-title">Edit <span style="color:#fa3c65">Profile</span></h2>
 
-    <!-- Profile Picture -->
     <div class="profile-pic-wrapper">
-      <img src="images/pplogo.jpg" alt="Profile Picture" id="preview" class="profile-pic">
-      <input type="file" id="profile-pic" accept="image/*" class="profile-pic-input">
-      <label for="profile-pic" class="edit-icon">
-        <img src="images/pencillogo.jpg" alt="Edit">
-      </label>
+      <img id="preview" class="profile-pic" src="images/pplogo.jpg" alt="Profile picture">
+      <div>
+        <label for="profile-pic-input" style="font-weight:600;cursor:pointer;">
+          Change profile picture
+        </label>
+        <input id="profile-pic-input" class="profile-pic-input" type="file" accept="image/*">
+        <div style="font-size:0.85rem;color:#666;margin-top:6px;">(PNG/JPG, will be uploaded to Firebase Storage)</div>
+      </div>
     </div>
 
     <form id="profileForm" novalidate>
       <div class="input-field">
-        <label for="fullname">Full Name</label>
-        <input type="text" id="fullname" required pattern="^[A-Za-z ]{3,50}$" placeholder="John Doe">
-        <div class="error-message">Enter a valid full name (letters & spaces, 3–50 chars).</div>
+        <label for="fullname">Full name</label>
+        <input id="fullname" type="text" placeholder="First Last" />
       </div>
 
       <div class="input-field">
-        <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="name@example.com" readonly>
-        <div class="error-message">Enter a valid email address.</div>
+        <label for="email">Email (readonly)</label>
+        <input id="email" type="email" placeholder="you@example.com" readonly />
       </div>
 
       <div class="input-field">
-        <label for="dob">Date of Birth</label>
-        <input type="date" id="dob" required>
-        <div class="error-message">Please select a valid date of birth.</div>
+        <label for="dob">Date of birth</label>
+        <input id="dob" type="date" />
       </div>
 
       <div class="input-field">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" required pattern="^[0-9]{10}$" placeholder="9876543210">
-        <div class="error-message">Enter a valid 10-digit phone number.</div>
+        <label for="phone">Phone</label>
+        <input id="phone" type="tel" placeholder="9876543210" />
       </div>
 
       <div class="input-field">
         <label for="location">Location</label>
-        <input type="text" id="location" required placeholder="City, Country">
-        <div class="error-message">Enter a valid location.</div>
+        <input id="location" type="text" placeholder="City, Country" />
       </div>
 
       <div class="input-field">
         <label for="bio">Bio</label>
-        <textarea id="bio" rows="3" maxlength="200" placeholder="Tell us about yourself..."></textarea>
+        <textarea id="bio" rows="3" placeholder="Short bio"></textarea>
       </div>
 
       <div class="input-field">
         <label for="skills">Skills</label>
-        <textarea id="skills" rows="2" placeholder="E.g., Python, Design, Leadership"></textarea>
+        <textarea id="skills" rows="2" placeholder="Comma separated"></textarea>
       </div>
 
       <div class="input-field">
         <label for="achievements">Achievements</label>
-        <textarea id="achievements" rows="2" placeholder="E.g., Hackathon Winner, Published Paper"></textarea>
+        <textarea id="achievements" rows="2" placeholder="E.g., Hackathon Winner"></textarea>
       </div>
 
       <div class="input-field">
-        <label for="teams">Previous Teams</label>
-        <textarea id="teams" rows="2" placeholder="E.g., Robotics Club, Startup X"></textarea>
+        <label for="teams">Teams</label>
+        <textarea id="teams" rows="2" placeholder="E.g., Robotics Club"></textarea>
       </div>
 
       <div class="input-field">
@@ -87,89 +94,153 @@
       </div>
 
       <button type="submit" class="save-btn">Save Profile</button>
+      <div id="message" class="msg" aria-live="polite"></div>
     </form>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase + logic -->
   <script type="module">
-    // ✅ Firebase CDN imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    // 🔑 Your Firebase config (replace with your web app credentials)
+    // Replace with your config (yours already provided earlier)
     const firebaseConfig = {
       apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
       authDomain: "synapse-ee716.firebaseapp.com",
       projectId: "synapse-ee716",
       storageBucket: "synapse-ee716.appspot.com",
       messagingSenderId: "894940754670",
-      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
-      measurementId: "G-PW7HGF2LTE"
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    const profileForm = document.getElementById("profileForm");
+    // UI elements
+    const previewImg = document.getElementById('preview');
+    const fileInput = document.getElementById('profile-pic-input');
+    const profileForm = document.getElementById('profileForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const msg = document.getElementById('message');
 
-    // ✅ Check if user is logged in and fetch profile data
+    let currentUser = null; // will be set once auth state known
+
+    // Helper: set message
+    function showMessage(text, isError = false) {
+      msg.textContent = text;
+      msg.className = isError ? 'err' : 'msg';
+      if (!text) msg.textContent = '';
+    }
+
+    // ON AUTH STATE
     onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
       if (!user) {
+        // No logged-in user — redirect to login page.
+        // This avoids showing editing UI unless user actually logged in.
         window.location.href = "/login_Page.html";
-      } else {
-        const docRef = doc(db, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          document.getElementById("fullname").value = data.firstName + " " + data.lastName;
-          document.getElementById("email").value = data.email;
-          document.getElementById("dob").value = data.dob || "";
-          document.getElementById("phone").value = data.phone || "";
-          document.getElementById("location").value = data.location || "";
-          document.getElementById("bio").value = data.bio || "";
-          document.getElementById("skills").value = data.skills || "";
-          document.getElementById("achievements").value = data.achievements || "";
-          document.getElementById("teams").value = data.teams || "";
-          document.getElementById("experience").value = data.experience || "";
+        return;
+      }
+
+      // Show logout button
+      logoutBtn.style.display = 'inline-block';
+
+      // Populate form from Firestore if data exists
+      try {
+        const uDocRef = doc(db, 'users', user.uid);
+        const snap = await getDoc(uDocRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          const full = (data.firstName || '') + (data.lastName ? (' ' + data.lastName) : '');
+          document.getElementById('fullname').value = full.trim();
+          document.getElementById('email').value = data.email || user.email || '';
+          document.getElementById('dob').value = data.dob || '';
+          document.getElementById('phone').value = data.phone || '';
+          document.getElementById('location').value = data.location || '';
+          document.getElementById('bio').value = data.bio || '';
+          document.getElementById('skills').value = data.skills || '';
+          document.getElementById('achievements').value = data.achievements || '';
+          document.getElementById('teams').value = data.teams || '';
+          document.getElementById('experience').value = data.experience || '';
+          if (data.profilePic) previewImg.src = data.profilePic;
+        } else {
+          // Document doesn't exist yet — keep fields empty but set email
+          document.getElementById('email').value = user.email || '';
         }
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+        showMessage('Error loading profile.', true);
       }
     });
 
-    // ✅ Save profile data to Firestore
-    profileForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
+    // LOGOUT
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        window.location.href = '/index.html';
+      } catch (err) {
+        showMessage('Logout failed: ' + err.message, true);
+      }
+    });
 
-      const fullname = document.getElementById("fullname").value.trim();
-      const [firstName, ...lastNameArr] = fullname.split(" ");
-      const lastName = lastNameArr.join(" ");
+    // UPLOAD PROFILE PICTURE
+    fileInput.addEventListener('change', async (e) => {
+      showMessage('');
+      if (!currentUser) { showMessage('Not signed in.', true); return; }
+      const file = e.target.files[0];
+      if (!file) return;
+      // Optional: validate file type/size
+      const storageRef = ref(storage, `profilePics/${currentUser.uid}`);
+      try {
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        previewImg.src = url;
+        // save url to user's document
+        await setDoc(doc(db, 'users', currentUser.uid), { profilePic: url }, { merge: true });
+        showMessage('Profile picture uploaded.');
+      } catch (err) {
+        console.error(err);
+        showMessage('Upload failed: ' + err.message, true);
+      }
+    });
+
+    // SAVE PROFILE
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showMessage('');
+      if (!currentUser) { showMessage('Not signed in.', true); return; }
+
+      // Parse name into first/last
+      const full = (document.getElementById('fullname').value || '').trim();
+      const [firstName, ...rest] = full.split(' ');
+      const lastName = rest.join(' ');
 
       const profileData = {
-        firstName,
-        lastName,
-        email: document.getElementById("email").value.trim(),
-        dob: document.getElementById("dob").value,
-        phone: document.getElementById("phone").value.trim(),
-        location: document.getElementById("location").value.trim(),
-        bio: document.getElementById("bio").value.trim(),
-        skills: document.getElementById("skills").value.trim(),
-        achievements: document.getElementById("achievements").value.trim(),
-        teams: document.getElementById("teams").value.trim(),
-        experience: document.getElementById("experience").value.trim()
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: document.getElementById('email').value || currentUser.email || '',
+        dob: document.getElementById('dob').value || '',
+        phone: document.getElementById('phone').value || '',
+        location: document.getElementById('location').value || '',
+        bio: document.getElementById('bio').value || '',
+        skills: document.getElementById('skills').value || '',
+        achievements: document.getElementById('achievements').value || '',
+        teams: document.getElementById('teams').value || '',
+        experience: document.getElementById('experience').value || ''
       };
 
       try {
-        await setDoc(doc(db, "users", user.uid), profileData, { merge: true });
-        alert("Profile saved successfully! 🎉");
+        await setDoc(doc(db, 'users', currentUser.uid), profileData, { merge: true });
+        showMessage('Profile saved successfully! 🎉');
       } catch (err) {
-        alert("Error saving profile: " + err.message);
+        console.error(err);
+        showMessage('Save failed: ' + err.message, true);
       }
     });
   </script>
 </body>
-
 </html>

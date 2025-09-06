@@ -6,28 +6,55 @@
 <title>Quick Team - Events</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<style>
+/* Add button styling consistent with theme */
+.create-event-btn {
+  display:inline-block;
+  padding: 0.8rem 1.5rem;
+  background: #fa3c65;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 2rem;
+  cursor: pointer;
+  margin: 1rem auto;
+  text-align: center;
+  transition: background .3s ease;
+}
+.create-event-btn:hover { background: #e52e55; }
+#eventList { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+.event-card { background: rgba(255,255,255,0.42); backdrop-filter: blur(12px); border-radius: 1.2rem; padding: 1.5rem; width: 250px; text-align:center; box-shadow:0 6px 20px rgba(0,0,0,.1); }
+.event-card h3{ font-family:'Montserrat'; font-weight:700; color:#222; margin-bottom:.5rem; }
+.event-card p{ margin:.2rem 0; color:#333; font-size:.9rem; }
+.event-card button{ margin-top:.5rem; padding:.5rem 1rem; border:none; border-radius:2rem; background:var(--pink); color:#fff; cursor:pointer; font-weight:600; }
+.event-card button:hover{ background:#e52e55; }
+</style>
 </head>
 <body>
-<header>
-    <nav class="navbar">
-  <div class="logo">
-    <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
-  </div>
-  <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About Us</a></li>
-    </ul>
-    <div class="profile">
-      <img src="images/profile.jpg" alt="Profile" class="profile-img">
-    </div>
-  </div>
-</nav>
 
-  </header>
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
+    </div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+      <div class="profile">
+        <img src="images/profile.jpg" alt="Profile" class="profile-img">
+      </div>
+    </div>
+  </nav>
+</header>
 
 <main>
-  <h2>Upcoming Events</h2>
+  <h2 style="text-align:center;">Upcoming Events</h2>
+
+  <!-- Create Event Button -->
+  <div style="text-align:center;">
+    <a href="create-event.html" class="create-event-btn">+ Create New Event</a>
+  </div>
 
   <!-- Filter -->
   <div style="text-align:center; margin-bottom:1.5rem;">
@@ -47,5 +74,47 @@
 </main>
 
 <script src="js/event-list.js"></script>
+<script>
+  // Example: fetch events from Firebase and display
+  const db = firebase.firestore();
+
+  const eventListDiv = document.getElementById('eventList');
+  const filterSelect = document.getElementById('filterType');
+
+  function displayEvents(events) {
+    eventListDiv.innerHTML = "";
+    events.forEach(doc => {
+      const event = doc.data();
+      const card = document.createElement("div");
+      card.className = "event-card";
+      card.innerHTML = `
+        <h3>${event.name}</h3>
+        <p>Type: ${event.type}</p>
+        <p>Date: ${event.date}</p>
+        <p>Slots: ${event.remainingSlots}</p>
+        <button onclick="viewEvent('${doc.id}')">View Details</button>
+      `;
+      eventListDiv.appendChild(card);
+    });
+  }
+
+  async function fetchEvents(filter='all'){
+    let query = db.collection("events").orderBy("createdAt", "desc");
+    if(filter !== 'all') query = query.where("type","==",filter);
+    const snapshot = await query.get();
+    displayEvents(snapshot.docs);
+  }
+
+  filterSelect.addEventListener("change", () => fetchEvents(filterSelect.value));
+
+  function viewEvent(id){
+    localStorage.setItem("selectedEventId", id);
+    window.location.href = "event-details.html";
+  }
+
+  // Initial fetch
+  fetchEvents();
+</script>
+
 </body>
 </html>

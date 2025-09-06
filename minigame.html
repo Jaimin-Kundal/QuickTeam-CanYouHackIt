@@ -3,47 +3,145 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Synapse - Icebreaker Minigame</title>
+<title>Minigame - Quick Team</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/minigame.css">
+<style>
+:root{--pink:#fa3c65;}
+body{margin:0;font-family:'Inter';min-height:100vh;display:flex;justify-content:center;align-items:center;background:url("../images/Background.png") no-repeat center center fixed;background-size:cover;color:#222;position:relative;overflow:hidden;}
+.blob{position:absolute;border-radius:60% 40% 30% 70% / 60% 30% 70% 40%;z-index:-1;opacity:.22;}
+.blob1{width:300px;height:280px;background:var(--pink);top:-80px;left:-100px;transform:rotate(25deg);}
+.blob2{width:240px;height:260px;background:#000;bottom:-100px;right:-60px;transform:rotate(-15deg);}
+.blob3{width:200px;height:200px;background:#555;top:40%;left:-70px;transform:rotate(40deg);}
+.blob4{width:150px;height:180px;background:#999;bottom:20%;right:30%;transform:rotate(70deg);}
+.card-container{background:rgba(255,255,255,0.42);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:1.4rem;box-shadow:0 8px 24px rgba(0,0,0,.1);padding:2rem;width:500px;max-width:90%;text-align:center;z-index:1;}
+input,select,button{width:100%;margin:.4rem 0;padding:.7rem;font-family:inherit;border-radius:.6rem;border:2px solid transparent;border-bottom:2px solid var(--pink);}
+button{background:#111827;color:#fff;font-weight:700;cursor:pointer;}
+button:hover{background:#232323;}
+#notifications{margin-top:1rem;text-align:left;font-size:.9rem;color:#222;}
+</style>
 </head>
 <body>
 
-<div class="minigame-container">
-    <h1 class="minigame-title">Icebreaker Minigame</h1>
-    <p class="minigame-subtitle">Answer a few fun questions to check your team compatibility!</p>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div class="blob blob4"></div>
 
-    <!-- Flashcards -->
-    <div class="flashcard-wrapper">
-        <div class="flashcard" id="minigame-card">
-            <div class="flashcard-front">
-                <p class="card-question" id="card-question"></p>
-            </div>
-            <div class="flashcard-back">
-                <p class="card-question" id="card-question-back"></p>
-                <div class="options-container" id="options-container"></div>
-            </div>
-        </div>
-    </div>
+<div class="card-container">
+  <h2>Icebreaker Minigame</h2>
 
-    <button class="next-btn" id="next-btn">Next</button>
+  <div id="leader-panel" style="display:none;">
+    <h3>Create Question</h3>
+    <input id="question" placeholder="Question">
+    <input id="o1" placeholder="Option 1">
+    <input id="o2" placeholder="Option 2">
+    <input id="o3" placeholder="Option 3">
+    <input id="o4" placeholder="Option 4">
+    <select id="correct">
+      <option value="">Correct Option</option>
+      <option value="0">Option 1</option>
+      <option value="1">Option 2</option>
+      <option value="2">Option 3</option>
+      <option value="3">Option 4</option>
+    </select>
+    <button id="save-btn">Save Question</button>
+  </div>
 
-    <div class="progress-bar">
-        <div class="progress" id="progress-bar"></div>
-    </div>
+  <div id="player-panel" style="display:none;">
+    <p id="q-text"></p>
+    <div id="options"></div>
+    <button id="next-btn">Next</button>
+  </div>
 
-    <!-- Compatibility Results (hidden initially) -->
-    <div class="compatibility-result" id="compatibility-result" style="display:none;">
-        <p id="compatibility-percentage" style="font-size:2rem; font-weight:700; margin-bottom:1rem;"></p>
-        <div class="results-progress-bar">
-            <div class="results-progress" id="results-progress"></div>
-        </div>
-        <p id="compatibility-message"></p>
-        <button class="next-btn" id="restart-btn">Play Again</button>
-    </div>
-
+  <div id="notifications"></div>
 </div>
 
-<script src="/js/minigame.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = { /* your config */ };
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const auth=firebase.auth();
+
+const urlParams=new URLSearchParams(window.location.search);
+const eventId=urlParams.get("eventId");
+
+let questions=[], current=0, score=0, user, isLeader=false;
+
+auth.onAuthStateChanged(async u=>{
+  if(!u) window.location.href="/login_Page.html";
+  user=u;
+
+  const eventDoc = await db.collection("events").doc(eventId).get();
+  const eventData = eventDoc.data();
+  isLeader=user.displayName===eventData.leader;
+
+  if(isLeader){ document.getElementById("leader-panel").style.display="block"; loadLeaderNotifications();}
+  else{ document.getElementById("player-panel").style.display="block"; loadPlayerNotifications();
+       const minigameDoc=await db.collection("minigames").doc(eventId).get();
+       if(minigameDoc.exists) questions=minigameDoc.data().questions||[];
+       showQuestion();
+  }
+});
+
+document.getElementById("save-btn")?.addEventListener("click", async ()=>{
+  const q=document.getElementById("question").value;
+  const o=[document.getElementById("o1").value, document.getElementById("o2").value, document.getElementById("o3").value, document.getElementById("o4").value];
+  const c=parseInt(document.getElementById("correct").value);
+  if(!q||o.some(v=>!v)||isNaN(c)) return alert("Fill all fields");
+  await db.collection("minigames").doc(eventId).set({questions: firebase.firestore.FieldValue.arrayUnion({q,o,c})},{merge:true});
+  alert("Question saved!");
+});
+
+function showQuestion(){
+  if(current>=questions.length){ submitScore(); return; }
+  const q=questions[current];
+  document.getElementById("q-text").innerText=q.q;
+  const optionsDiv=document.getElementById("options");
+  optionsDiv.innerHTML="";
+  q.o.forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    btn.innerText=opt;
+    btn.onclick=()=>{if(i===q.c) score++; current++; showQuestion();}
+    optionsDiv.appendChild(btn);
+  });
+}
+
+async function submitScore(){
+  await db.collection("scores").add({eventId, player:user.displayName, score, createdAt: firebase.firestore.FieldValue.serverTimestamp()});
+  alert("Minigame completed. Score: "+score);
+}
+
+// Notifications
+async function loadLeaderNotifications(){
+  const notif=document.getElementById("notifications");
+  notif.innerHTML="<b>Notifications:</b><br>";
+  const reqs=await db.collection("requests").where("eventId","==",eventId).where("status","==","pending").get();
+  reqs.forEach(doc=>{
+    const d=doc.data();
+    const div=document.createElement("div");
+    div.innerHTML=`${d.player} requested to join <button onclick="handleRequest('${doc.id}','accept')">Accept</button> <button onclick="handleRequest('${doc.id}','reject')">Reject</button>`;
+    notif.appendChild(div);
+  });
+}
+
+window.handleRequest=async(id,action)=>{
+  await db.collection("requests").doc(id).update({status:action});
+  loadLeaderNotifications();
+}
+
+async function loadPlayerNotifications(){
+  const notif=document.getElementById("notifications");
+  notif.innerHTML="<b>Notifications:</b><br>";
+  const notifs=await db.collection("requests").where("player","==",user.displayName).get();
+  notifs.forEach(doc=>{
+    const d=doc.data();
+    if(d.status!=="pending") notif.innerHTML+=`Request ${d.status} for event ${d.eventId}<br>`;
+  });
+}
+</script>
 </body>
 </html>

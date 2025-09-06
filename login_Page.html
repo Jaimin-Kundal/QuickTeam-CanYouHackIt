@@ -16,7 +16,7 @@
 
   <div class="login-card">
     <h2 class="login-title">Welcome to <span>Synapse</span></h2>
-    <form>
+    <form id="loginForm">
       <div class="input-field">
         <label for="email">Email</label>
         <input type="email" id="email" placeholder=" " required>
@@ -29,6 +29,45 @@
     </form>
     <p class="alt-action">Don’t have an account? <a href="/SignUp_Page.html">Sign up</a></p>
   </div>
-  <script src="js/login.js"></script>
+
+  <!-- Firebase SDK via CDN -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+      authDomain: "synapse-ee716.firebaseapp.com",
+      projectId: "synapse-ee716",
+      storageBucket: "synapse-ee716.appspot.com",
+      messagingSenderId: "894940754670",
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+      measurementId: "G-PW7HGF2LTE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        // ✅ Sign in with Firebase Auth
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful! 🎉");
+
+        // ✅ Redirect to index.html after login
+        window.location.href = "/index.html";
+
+      } catch (err) {
+        console.error(err);
+        alert("Error: " + err.message);
+      }
+    });
+  </script>
 </body>
 </html>

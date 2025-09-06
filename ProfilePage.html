@@ -18,7 +18,6 @@
   <div class="blob blob4"></div>
   <div class="circle-top-right"></div>
 
-
   <div class="profile-card">
     <h2 class="profile-title">Your <span>Profile</span></h2>
 
@@ -93,12 +92,11 @@
 
   <!-- Firebase SDK -->
   <script type="module">
-    // ✅ Firebase CDN imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    // 🔑 Your Firebase config (replace with your web app credentials)
     const firebaseConfig = {
       apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
       authDomain: "synapse-ee716.firebaseapp.com",
@@ -109,14 +107,22 @@
       measurementId: "G-PW7HGF2LTE"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     const profileForm = document.getElementById("profileForm");
+    const profilePicInput = document.getElementById("profile-pic");
+    const previewImg = document.getElementById("preview");
 
-    // ✅ Check if user is logged in and fetch profile data
+    // Preview selected image
+    profilePicInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file) previewImg.src = URL.createObjectURL(file);
+    });
+
+    // Load existing profile
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "/login_Page.html";
@@ -125,8 +131,8 @@
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          document.getElementById("fullname").value = data.firstName + " " + data.lastName;
-          document.getElementById("email").value = data.email;
+          document.getElementById("fullname").value = (data.firstName || "") + " " + (data.lastName || "");
+          document.getElementById("email").value = data.email || user.email;
           document.getElementById("dob").value = data.dob || "";
           document.getElementById("phone").value = data.phone || "";
           document.getElementById("location").value = data.location || "";
@@ -135,15 +141,26 @@
           document.getElementById("achievements").value = data.achievements || "";
           document.getElementById("teams").value = data.teams || "";
           document.getElementById("experience").value = data.experience || "";
+          if (data.photoURL) previewImg.src = data.photoURL;
+        } else {
+          document.getElementById("email").value = user.email;
         }
       }
     });
 
-    // ✅ Save profile data to Firestore
+    // Save profile with photo upload
     profileForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
+
+      let photoURL = "";
+      const file = profilePicInput.files[0];
+      if (file) {
+        const storageRef = ref(storage, `profile_pics/${user.uid}/${file.name}`);
+        await uploadBytes(storageRef, file);
+        photoURL = await getDownloadURL(storageRef);
+      }
 
       const fullname = document.getElementById("fullname").value.trim();
       const [firstName, ...lastNameArr] = fullname.split(" ");
@@ -160,20 +177,18 @@
         skills: document.getElementById("skills").value.trim(),
         achievements: document.getElementById("achievements").value.trim(),
         teams: document.getElementById("teams").value.trim(),
-        experience: document.getElementById("experience").value.trim()
+        experience: document.getElementById("experience").value.trim(),
+        ...(photoURL && { photoURL })
       };
 
       try {
         await setDoc(doc(db, "users", user.uid), profileData, { merge: true });
         alert("Profile saved successfully! 🎉");
+        window.location.href = "/index.html"; // redirect to home page
       } catch (err) {
         alert("Error saving profile: " + err.message);
       }
     });
   </script>
-  <script src="js/profile2.js"></script>
-  
-
 </body>
-
 </html>

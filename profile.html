@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+  <div class="blob blob4"></div>
+  <div class="circle-top-right"></div>
+  
+  <div class="profile-card">
+    <h2 class="profile-title">Your <span>Profile</span></h2>
+    <div class="profile-pic-wrapper">
+      <img src="images/pplogo.jpg" alt="Profile Picture" class="profile-pic" id="profile-pic">
+    </div>
+    <div class="profile-info-display">
+      <p>Full Name: <span id="display-fullname"></span></p>
+      <p>Email: <span id="display-email"></span></p>
+      <p>Date of Birth: <span id="display-dob"></span></p>
+      <p>Phone Number: <span id="display-phone"></span></p>
+      <p>Location: <span id="display-location"></span></p>
+      <p>Bio: <span id="display-bio"></span></p>
+      <p>Skills: <span id="display-skills"></span></p>
+      <p>Achievements: <span id="display-achievements"></span></p>
+      <p>Previous Teams: <span id="display-teams"></span></p>
+      <p>Experience: <span id="display-experience"></span></p>
+    </div>
+    <a href="/ProfilePage.html" class="edit-profile-btn">Edit Profile</a>
+  </div>
+
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+      authDomain: "synapse-ee716.firebaseapp.com",
+      projectId: "synapse-ee716",
+      storageBucket: "synapse-ee716.appspot.com",
+      messagingSenderId: "894940754670",
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+      measurementId: "G-PW7HGF2LTE"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Show logged-in user’s profile
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Redirect to login if not logged in
+        window.location.href = "/login_Page.html";
+      } else {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          document.getElementById("display-fullname").textContent = `${data.firstName || ""} ${data.lastName || ""}`.trim();
+          document.getElementById("display-email").textContent = data.email || user.email || "";
+          document.getElementById("display-dob").textContent = data.dob || "";
+          document.getElementById("display-phone").textContent = data.phone || "";
+          document.getElementById("display-location").textContent = data.location || "";
+          document.getElementById("display-bio").textContent = data.bio || "";
+          document.getElementById("display-skills").textContent = data.skills || "";
+          document.getElementById("display-achievements").textContent = data.achievements || "";
+          document.getElementById("display-teams").textContent = data.teams || "";
+          document.getElementById("display-experience").textContent = data.experience || "";
+
+          // Profile picture if saved in Firestore
+          if (data.profilePicUrl) {
+            document.getElementById("profile-pic").src = data.profilePicUrl;
+          }
+        } else {
+          alert("Profile not found. Please update your details in Edit Profile.");
+        }
+      }
+    });
+  </script>
+</body>
+</html>

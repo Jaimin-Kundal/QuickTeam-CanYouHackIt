@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>About Us - Synapse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/about.css">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>About Us - Synapse</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/about.css">
 </head>
+
 <body>
   <header>
-  <nav class="navbar">
-    <div class="logo">
-      <a href="/index.html"><img src="images/logo.png" alt="Quick Team Logo" width="150" height="75"></a>
-      
-    </div>
-    <div class="navbar-actions">
-      <a href="/index.html"><button class="login-link">Home</button></a>
-      <a href="/login_Page.html"><button class="login-link">Log in</button></a>
-      <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
-    </div>
-  </nav>
-</header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="/index.html"><img src="images/logo.png" alt="Synapse Logo" width="150" height="75"></a>
+      </div>
+
+      <div class="navbar-actions" id="navbarActions">
+        <!-- Default buttons (will be replaced dynamically) -->
+        <a href="/index.html"><button class="login-link">Home</button></a>
+        <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+        <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
+      </div>
+    </nav>
+  </header>
 
   <main>
     <section class="hero">
       <h1 class="hero-title">
-      Meet Our <span class="highlight">Team</span>
-    </h1>
-    <p class="hero-desc">
-      The people behind Synapse. Frontend, AI/ML, Backend, and UI/UX experts bringing your ideas to life.
-    </p>
-    <a href="/SignUp_Page.html"><button class="join-btn">Join Synapse</button></a>
+        Meet Our <span class="highlight">Team</span>
+      </h1>
+      <p class="hero-desc">
+        The people behind Synapse. Frontend, AI/ML, Backend, and UI/UX experts bringing your ideas to life.
+      </p>
+      <a href="/SignUp_Page.html"><button class="join-btn">Join Synapse</button></a>
     </section>
 
     <section class="team">
@@ -57,6 +60,55 @@
       </div>
     </section>
   </main>
+
+  <!-- Firebase Auth for dynamic navbar -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+      authDomain: "synapse-ee716.firebaseapp.com",
+      projectId: "synapse-ee716",
+      storageBucket: "synapse-ee716.appspot.com",
+      messagingSenderId: "894940754670",
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+      measurementId: "G-PW7HGF2LTE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const navbarActions = document.getElementById("navbarActions");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Logged in → show Home, Events, Profile, About, Logout
+        navbarActions.innerHTML = `
+          <a href="/index.html"><button class="login-link">Home</button></a>
+          <a href="/event-list.html"><button class="login-link">Events</button></a>
+          <a href="/profile.html"><button class="signup-btn">Profile</button></a>
+          <a href="/about.html"><button class="login-link">About Us</button></a>
+          <button class="login-link" id="logoutBtn">Logout</button>
+        `;
+
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+          await signOut(auth);
+          window.location.href = "/index.html";
+        });
+      } else {
+        // Not logged in → Home, Events, Login, Signup
+        navbarActions.innerHTML = `
+          <a href="/index.html"><button class="login-link">Home</button></a>
+          <a href="/event-list.html"><button class="login-link">Events</button></a>
+          <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+          <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
+        `;
+      }
+    });
+  </script>
+
   <script src="js/about.js"></script>
 </body>
+
 </html>

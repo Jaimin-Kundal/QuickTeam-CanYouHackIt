@@ -3,53 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Details</title>
+<title>Quick Team - Events</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<style>
+:root { --pink:#fa3c65; }
+body { margin:0; font-family:'Inter',Arial,sans-serif; min-height:100vh; background:url("../images/Background.png") no-repeat center center fixed; background-size:cover; color:#222; }
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; }
+.nav-links { list-style:none; display:flex; gap:1rem; }
+.nav-links li a { text-decoration:none; color:#222; font-weight:600; }
+.profile-img { width:50px; height:50px; border-radius:50%; }
+h2 { text-align:center; margin:1.5rem 0; }
+#eventList { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; padding:0 2rem; }
+.event-card { background: rgba(255,255,255,0.42); backdrop-filter: blur(12px); border-radius:1.2rem; padding:1.5rem; width:250px; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,.1); }
+.event-card h3 { margin-bottom:0.5rem; font-family:'Montserrat'; font-weight:700; }
+.event-card p { margin-bottom:1rem; }
+.view-btn { padding:0.6rem 1.2rem; background:var(--pink); color:#fff; border:none; border-radius:2rem; cursor:pointer; font-weight:700; }
+.view-btn:hover { background:#fa2b50; }
+.create-btn { display:block; margin:1rem auto; padding:1rem 2rem; background:var(--pink); color:#fff; border:none; border-radius:2rem; font-weight:700; cursor:pointer; }
+.create-btn:hover { background:#fa2b50; }
+</style>
 </head>
 <body>
+
 <header>
   <nav class="navbar">
     <div class="logo">
       <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
     </div>
     <div class="nav-right">
+<<<<<<< HEAD
         <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About Us</a></li>
     </ul>
     <div class="profile">
       <img src="images/profile.jpg" alt="Profile" class="profile-img">
+=======
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+      <div class="profile">
+        <img src="images/profile.jpg" alt="Profile" class="profile-img">
+      </div>
+>>>>>>> 7d3ad8891b789b87826862bdbf840ab85d44b6dd
     </div>
   </nav>
 </header>
 
 <main>
-  <div class="event-info">
-    <h2 id="eventName"></h2>
-    <table class="event-table">
-      <tr>
-        <td>Date</td>
-        <td id="eventDate"></td>
-      </tr>
-      <tr>
-        <td>Remaining Slots</td>
-        <td id="eventSlots"></td>
-      </tr>
-      <tr>
-        <td>Team Members</td>
-        <td>
-          <div class="table-team-members" id="teamMembers"></div>
-        </td>
-      </tr>
-      <tr>
-      <td colspan="2" style="text-align:center;">
-        <button class="join-btn" id="requestBtn">Request to Join</button>
-      </td>
-    </tr>
-    </table>
+  <h2>Upcoming Events</h2>
+
+  <button class="create-btn" onclick="window.location.href='/create-event.html'">Create New Event</button>
+
+  <div style="text-align:center; margin-bottom:1.5rem;">
+    <label>Filter by Type: </label>
+    <select id="filterType">
+      <option value="all">All</option>
+      <option value="Hackathon">Hackathon</option>
+      <option value="AI/ML">AI/ML</option>
+      <option value="Frontend">Frontend</option>
+      <option value="Backend">Backend</option>
+      <option value="UI/UX">UI/UX</option>
+      <option value="Mobile">Mobile</option>
+    </select>
   </div>
+
+  <div id="eventList"></div>
 </main>
-<script src="js/event-detail.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+  authDomain: "synapse-ee716.firebaseapp.com",
+  projectId: "synapse-ee716",
+  storageBucket: "synapse-ee716.appspot.com",
+  messagingSenderId: "894940754670",
+  appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+  measurementId: "G-PW7HGF2LTE"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+const eventListDiv = document.getElementById("eventList");
+const filterType = document.getElementById("filterType");
+
+function renderEvent(doc){
+  const data = doc.data();
+  const type = data.type || "Unknown";
+
+  if(filterType.value !== "all" && filterType.value !== type) return;
+
+  const card = document.createElement("div");
+  card.className = "event-card";
+  card.innerHTML = `
+    <h3>${data.name}</h3>
+    <p>${type} | ${data.date}</p>
+    <button class="view-btn" onclick="openEvent('${doc.id}')">View</button>
+  `;
+  eventListDiv.appendChild(card);
+}
+
+function openEvent(id){
+  localStorage.setItem("selectedEventId", id);
+  window.location.href = "/event-details.html";
+}
+
+// Real-time listener for events
+db.collection("events").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+  eventListDiv.innerHTML = "";
+  snapshot.forEach(doc => renderEvent(doc));
+});
+
+filterType.addEventListener("change", () => {
+  db.collection("events").orderBy("createdAt", "desc").get().then(snapshot => {
+    eventListDiv.innerHTML = "";
+    snapshot.forEach(doc => renderEvent(doc));
+  });
+});
+</script>
+
 </body>
 </html>

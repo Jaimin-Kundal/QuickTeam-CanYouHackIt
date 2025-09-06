@@ -6,22 +6,34 @@
   <title>Synapse</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/index.css">
+  <style>
+    /* ✅ Navbar layout */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+    .logo img {
+      height: 60px;
+    }
+    .navbar-actions {
+      display: flex;
+      gap: 15px;
+    }
+  </style>
 </head>
 <body>
 
   <header>
     <nav class="navbar">
+      <!-- ✅ Logo (left) -->
       <div class="logo">
-        <a href="#"><img src="images/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/></a>
+        <a href="/index.html"><img src="images/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/></a>
       </div>
-      <div class="search-bar-wrap">
-        <form class="search-bar" autocomplete="off" style="width:100%;">
-          <input type="text" placeholder="Search events..."/>
-          <span class="loc">Campus, IN</span>
-          <span class="icon">&#128269;</span>
-        </form>
-      </div>
-      <div class="navbar-actions">
+
+      <!-- ✅ Navbar Actions (right, dynamic with Firebase) -->
+      <div class="navbar-actions" id="navbarActions">
         <a href="/login_Page.html"><button class="login-link">Log in</button></a>
         <a href="/about.html"><button class="login-link">About Us</button></a>
         <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
@@ -46,9 +58,50 @@
       </section>
     </div>
   </main>
-  
 
-  
+  <!-- ✅ Firebase Auth Navbar Control -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+      authDomain: "synapse-ee716.firebaseapp.com",
+      projectId: "synapse-ee716",
+      storageBucket: "synapse-ee716.appspot.com",
+      messagingSenderId: "894940754670",
+      appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+      measurementId: "G-PW7HGF2LTE"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const navbarActions = document.getElementById("navbarActions");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // ✅ Logged in → Profile + About Us + Logout
+        navbarActions.innerHTML = `
+          <a href="/profile.html"><button class="signup-btn">Profile</button></a>
+          <a href="/about.html"><button class="login-link">About Us</button></a>
+          <button class="login-link" id="logoutBtn">Logout</button>
+        `;
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+          await signOut(auth);
+          window.location.href = "/index.html";
+        });
+      } else {
+        // ❌ Not logged in → Login + About Us + Signup
+        navbarActions.innerHTML = `
+          <a href="/login_Page.html"><button class="login-link">Log in</button></a>
+          <a href="/about.html"><button class="login-link">About Us</button></a>
+          <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
+        `;
+      }
+    });
+  </script>
+
   <script src="js/index.js"></script>
 </body>
 </html>

@@ -1,4 +1,7 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
   authDomain: "synapse-ee716.firebaseapp.com",
@@ -9,12 +12,13 @@ const firebaseConfig = {
   measurementId: "G-PW7HGF2LTE"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Form elements
+// Get eventId from URL
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("id");
+
 const form = document.getElementById("createTeamForm");
 const statusMsg = document.getElementById("teamStatusMsg");
 
@@ -25,31 +29,33 @@ form.addEventListener("submit", async (e) => {
   const teamLeader = document.getElementById("teamLeader").value.trim();
   const teamMembers = document.getElementById("teamMembers").value
                         .split(",")
-                        .map(name => name.trim());
-  const associatedEvent = document.getElementById("associatedEvent").value.trim();
+                        .map(m => m.trim());
 
-  if (!teamName || !teamLeader || teamMembers.length === 0 || !associatedEvent) {
-    alert("Please fill all fields correctly.");
+  if (!teamName || !teamLeader || teamMembers.length === 0 || !eventId) {
+    statusMsg.textContent = "Please fill all fields.";
+    statusMsg.style.color = "red";
     return;
   }
 
   try {
-    await db.collection("teams").add({
+    await addDoc(collection(db, "teams"), {
       teamName,
-      teamLeader,
-      teamMembers,
-      associatedEvent,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      createdBy: auth.currentUser ? auth.currentUser.uid : "anonymous"
+      leader: teamLeader,
+      members: teamMembers, // store UIDs here ideally
+      eventId,
+      createdAt: serverTimestamp()
     });
 
     statusMsg.textContent = "Team created successfully!";
     statusMsg.style.color = "green";
     form.reset();
 
+    // Redirect back to event details
+    window.location.href = `event-detail.html?id=${eventId}`;
+
   } catch (error) {
     console.error("Error creating team: ", error);
-    statusMsg.textContent = "Error creating team. Try again!";
+    statusMsg.textContent = "Error creating team.";
     statusMsg.style.color = "red";
   }
 });

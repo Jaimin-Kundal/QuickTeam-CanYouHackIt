@@ -1,8 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { 
+  getFirestore, collection, addDoc, getDoc, getDocs, doc, query, where, serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// Firebase config
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// 🔹 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
   authDomain: "synapse-ee716.firebaseapp.com",
@@ -16,71 +17,71 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Elements
-const form = document.getElementById('createTeamForm');
-const statusMsg = document.getElementById('statusMsg');
-const teamListEl = document.getElementById('teamList');
-
-// Get event ID from URL query parameter
+// 🔹 Get eventId from URL
 const params = new URLSearchParams(window.location.search);
-const eventId = params.get('id');
+const eventId = params.get("id");
 
-// --- Load registered teams for this event ---
+// 🔹 DOM elements
+const eventNameDisplay = document.getElementById("eventNameDisplay");
+const eventTypeDisplay = document.getElementById("eventTypeDisplay");
+const eventDateDisplay = document.getElementById("eventDateDisplay");
+const eventSlotsDisplay = document.getElementById("eventSlotsDisplay");
+const eventDescDisplay = document.getElementById("eventDescDisplay");
+const teamListEl = document.getElementById("teamList");
+const createTeamBtn = document.getElementById("createTeamBtn");
+
+// --- Load Event Details ---
+async function loadEvent() {
+  if (!eventId) return;
+
+  const eventRef = doc(db, "events", eventId);
+  const eventSnap = await getDoc(eventRef);
+
+  if (eventSnap.exists()) {
+    const eventData = eventSnap.data();
+    eventNameDisplay.textContent = eventData.name;
+    eventTypeDisplay.textContent = eventData.type;
+    eventDateDisplay.textContent = eventData.date;
+    eventSlotsDisplay.textContent = eventData.slots || "N/A";
+    eventDescDisplay.textContent = eventData.description;
+
+    // update link
+    createTeamBtn.href = `create-team.html?id=${eventId}`;
+  } else {
+    eventNameDisplay.textContent = "Event not found";
+  }
+}
+
+// --- Load Teams Registered For This Event ---
 async function loadTeams() {
   if (!eventId) return;
 
-  const q = query(collection(db, 'teams'), where('eventId', '==', eventId));
+  const q = query(collection(db, "teams"), where("eventId", "==", eventId));
   const querySnapshot = await getDocs(q);
 
-  teamListEl.innerHTML = ""; // Clear existing
+  teamListEl.innerHTML = ""; // Clear previous
 
-  querySnapshot.forEach(doc => {
-    const team = doc.data();
-    const li = document.createElement('li');
-    li.textContent = `${team.teamName} - Members: ${team.members.join(", ")}`;
-    teamListEl.appendChild(li);
+  if (querySnapshot.empty) {
+    teamListEl.innerHTML = "<p>No teams registered yet.</p>";
+    return;
+  }
+
+  querySnapshot.forEach((teamDoc) => {
+    const team = teamDoc.data();
+
+    const teamDiv = document.createElement("div");
+    teamDiv.classList.add("team-card");
+
+    teamDiv.innerHTML = `
+      <h4>${team.teamName}</h4>
+      <p><strong>Leader:</strong> ${team.leader || "N/A"}</p>
+      <p><strong>Members:</strong> ${team.members ? team.members.join(", ") : "None"}</p>
+    `;
+
+    teamListEl.appendChild(teamDiv);
   });
 }
 
-// --- Handle form submission ---
-if (form) {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const teamName = document.getElementById('teamName').value.trim();
-    const members = document.getElementById('members').value.split(',').map(m => m.trim());
-
-    if (!teamName || members.length === 0 || !eventId) {
-      statusMsg.textContent = "Please fill all fields.";
-      statusMsg.style.color = "red";
-      return;
-    }
-
-    try {
-      // Add new team to Firebase
-      await addDoc(collection(db, 'teams'), {
-        teamName,
-        members,
-        eventId,
-        createdAt: serverTimestamp()
-      });
-
-      // Append new team immediately
-      const li = document.createElement('li');
-      li.textContent = `${teamName} - Members: ${members.join(", ")}`;
-      teamListEl.appendChild(li);
-
-      statusMsg.textContent = "Team created successfully!";
-      statusMsg.style.color = "green";
-      form.reset();
-
-    } catch (err) {
-      console.error(err);
-      statusMsg.textContent = "Error creating team. Try again!";
-      statusMsg.style.color = "red";
-    }
-  });
-}
-
-// Load teams when page loads
+// --- Initialize ---
+loadEvent();
 loadTeams();

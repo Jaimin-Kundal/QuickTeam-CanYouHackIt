@@ -1,0 +1,76 @@
+:root { --pink: #fa3c65; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', Arial, sans-serif;
+  color: #222;
+  background: url("../images/Background.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+#createTeamOuter {
+  max-width: 650px;
+  width: 100%;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border-radius: 1.6rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+#createTeamContainer {
+  background: rgba(255,255,255,0.42);
+  backdrop-filter: blur(12px);
+  border-radius: 1.4rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.event-title {
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+}
+.event-title span { color: var(--pink); }
+
+.input-field {
+  margin-bottom: 1.4rem;
+  text-align: left;
+}
+.input-field label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  color: #333;
+}
+.input-field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 2px soalid var(--pink);
+  border-radius: 0.6rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.submit-btn {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  background: #111827;
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.8rem;
+}
+.submit-btn:hover { background: #232323; }
+
+#teamStatusMsg { margin-top: 1rem; font-weight: bold; color: var(--pink); text-align: center; }

@@ -1,125 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Details</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details - Quick Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/event-detail.css">
 </head>
 <body>
-<header>
-  <nav class="navbar">
-    <div class="logo">
-      <img src="images/logo.png" alt="Quick Team Logo" width="150" height="75">
-    </div>
-    <div class="nav-links">
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About Us</a></li>
-      </ul>
-      <div class="profile">
-        <a href="profile.html"><img src="images/profile.jpg" alt="Profile" class="profile-img"></a>
-      </div>
-    </div>
-  </nav>
-</header>
 
 <main>
-  <div class="event-info">
-    <h2 id="eventName"></h2>
-    <table class="event-table">
-      <tr>
-        <td>Date</td>
-        <td id="eventDate"></td>
-      </tr>
-      <tr>
-        <td>Remaining Slots</td>
-        <td id="eventSlots"></td>
-      </tr>
-      <tr>
-        <td>Team Members</td>
-        <td>
-          <div class="table-team-members" id="teamMembers"></div>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" style="text-align:center;">
-          <button class="join-btn" id="requestBtn">Request to Join</button>
-        </td>
-      </tr>
-    </table>
+  <div class="event-card">
+    <h2 class="event-title">Event Details</h2>
+    <p><strong>Name:</strong> <span id="eventNameDisplay"></span></p>
+    <p><strong>Type:</strong> <span id="eventTypeDisplay"></span></p>
+    <p><strong>Date:</strong> <span id="eventDateDisplay"></span></p>
+    <p><strong>Remaining Slots:</strong> <span id="eventSlotsDisplay"></span></p>
+    <p><strong>Description:</strong> <span id="eventDescDisplay"></span></p>
+
+    <a id="createTeamBtn" href="create-team.html" class="join-btn">Create Team</a>
+  </div>
+
+  <div class="teams-card">
+    <h3>Registered Teams</h3>
+    <div id="teamList">
+      <!-- Team list populated by JS -->
+    </div>
   </div>
 </main>
 
-<script>
-// ✅ Load events: localStorage first, fallback to default
-let events = JSON.parse(localStorage.getItem("events")) || [
-  {id:1, name:"Hackathon 2025", date:"2025-10-15", slots:5, type:"Hackathon", team:["Megha","Jaimin","Bhavya"]},
-  {id:2, name:"AI/ML Sprint", date:"2025-10-20", slots:3, type:"AI/ML", team:["Jaimin","Bhavya"]},
-  {id:3, name:"Frontend Frenzy", date:"2025-11-05", slots:4, type:"Frontend", team:["Megha","Maritreye"]},
-  {id:4, name:"Backend Bonanza", date:"2025-11-10", slots:2, type:"Backend", team:["Jaimin","Bhavya"]}
-];
-
-// ✅ Get the selected event ID
-const eventId = parseInt(localStorage.getItem("selectedEventId"));
-const event = events.find(e => e.id === eventId);
-
-if (!event) {
-  // If event not found
-  document.getElementById("eventName").innerText = "Event not found!";
-  document.getElementById("eventDate").innerText = "-";
-  document.getElementById("eventSlots").innerText = "-";
-} else {
-  // ✅ Display event details
-  document.getElementById("eventName").innerText = event.name;
-  document.getElementById("eventDate").innerText = event.date;
-  document.getElementById("eventSlots").innerText = event.slots;
-
-  // ✅ Display team members
-  const teamDiv = document.getElementById("teamMembers");
-  teamDiv.innerHTML = "";
-  if (event.team && event.team.length > 0) {
-    event.team.forEach(member => {
-      const div = document.createElement("div");
-      div.className = "member";
-      div.innerHTML = `<img src="images/${member.toLowerCase()}.jpg" alt="${member}"><h4>${member}</h4>`;
-      teamDiv.appendChild(div);
-    });
-  } else {
-    teamDiv.innerHTML = "<p>No team members yet.</p>";
-  }
-
-  // ✅ Request to join button
-  document.getElementById("requestBtn").addEventListener("click", () => {
-    if (event.slots > 0) {
-      event.slots--;
-
-      // (Optional) Add current user as team member
-      const currentUser = "You"; // 🔹 Replace with logged-in user name later
-      event.team = event.team || [];
-      event.team.push(currentUser);
-
-      // Update DOM
-      document.getElementById("eventSlots").innerText = event.slots;
-      const div = document.createElement("div");
-      div.className = "member";
-      div.innerHTML = `<img src="images/default.jpg" alt="${currentUser}"><h4>${currentUser}</h4>`;
-      teamDiv.appendChild(div);
-
-      // ✅ Save updated events back to localStorage
-      localStorage.setItem("events", JSON.stringify(events));
-
-      // Redirect to mini-game
-      window.location.href = "minigame.html";
-    } else {
-      alert("Sorry, no slots remaining!");
-    }
-  });
-}
-</script>
-<script type="module" src="js/event-details.js"></script>
-
-
+<script src="js/event-detail.js"></script>
 </body>
 </html>

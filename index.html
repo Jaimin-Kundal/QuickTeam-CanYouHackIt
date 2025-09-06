@@ -19,47 +19,51 @@
     }
     .navbar-actions {
       display: flex;
-      align-items: center;
       gap: 15px;
+      align-items: center;
     }
-    /* ✅ Search */
-    .search-box {
-      padding: 6px 10px;
-      border-radius: 5px;
+
+    /* ✅ Search Bar */
+    .search-container {
+      margin: 0 20px;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+    .search-container input {
+      width: 100%;
+      padding: 8px 12px;
       border: 1px solid #ccc;
+      border-radius: 20px;
       font-size: 14px;
+      outline: none;
     }
-    .search-results {
-      margin: 10px 20px;
-      padding: 10px;
-      border-radius: 8px;
-      background: #f9f9f9;
+
+    /* ✅ Results Section */
+    .search-results-section {
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #fafafa;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
       display: none;
     }
-    .search-section {
-      margin-bottom: 12px;
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
     }
-    .search-section h4 {
-      margin: 5px 0;
-      font-size: 15px;
-      font-weight: bold;
-      color: #333;
-    }
-    .search-result-item {
-      padding: 6px 8px;
-      border-bottom: 1px solid #ddd;
-      cursor: pointer;
-    }
-    .search-result-item:last-child {
+    .result-item:last-child {
       border-bottom: none;
     }
-    .event-name {
-      font-weight: bold;
+    .result-name {
+      font-weight: 600;
       color: #222;
     }
-    .event-type {
-      font-size: 13px;
-      color: #666;
+    .result-type {
+      font-size: 14px;
+      color: #777;
     }
   </style>
 </head>
@@ -72,9 +76,13 @@
         <a href="/index.html"><img src="images/WhatsApp_Image_2025-09-05_at_14.47.40_8f91d384-removebg-preview.png" alt="Synapse Logo"/></a>
       </div>
 
+      <!-- ✅ Search in Navbar -->
+      <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search events, profiles, skills...">
+      </div>
+
       <!-- ✅ Navbar Actions (right, dynamic with Firebase) -->
       <div class="navbar-actions" id="navbarActions">
-        <input type="text" id="searchBox" class="search-box" placeholder="Search anything..."/>
         <a href="/login_Page.html"><button class="login-link">Log in</button></a>
         <a href="/event-list.html"><button class="login-link">Events</button></a>
         <a href="/about.html"><button class="login-link">About Us</button></a>
@@ -83,8 +91,8 @@
     </nav>
   </header>
 
-  <!-- ✅ Search Results Section -->
-  <div id="searchResults" class="search-results"></div>
+  <!-- ✅ Results Section -->
+  <section id="searchResultsSection" class="search-results-section"></section>
 
   <main>
     <div class="hero-container">
@@ -104,11 +112,11 @@
     </div>
   </main>
 
-  <!-- ✅ Firebase + Search + Auth Control -->
+  <!-- ✅ Firebase Auth Navbar Control + Search -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
@@ -125,14 +133,10 @@
     const db = getFirestore(app);
 
     const navbarActions = document.getElementById("navbarActions");
-    const searchBox = document.getElementById("searchBox");
-    const searchResults = document.getElementById("searchResults");
 
-    // ✅ Auth control
     onAuthStateChanged(auth, (user) => {
       if (user) {
         navbarActions.innerHTML = `
-          <input type="text" id="searchBox" class="search-box" placeholder="Search anything..."/>
           <a href="/profile.html"><button class="signup-btn">Profile</button></a>
           <a href="/event-list.html"><button class="login-link">Events</button></a>
           <a href="/about.html"><button class="login-link">About Us</button></a>
@@ -142,115 +146,89 @@
           await signOut(auth);
           window.location.href = "/index.html";
         });
-        document.getElementById("searchBox").addEventListener("input", handleSearch);
       } else {
         navbarActions.innerHTML = `
-          <input type="text" id="searchBox" class="search-box" placeholder="Search anything..."/>
           <a href="/login_Page.html"><button class="login-link">Log in</button></a>
           <a href="/event-list.html"><button class="login-link">Events</button></a>
           <a href="/about.html"><button class="login-link">About Us</button></a>
           <a href="/SignUp_Page.html"><button class="signup-btn">Sign up</button></a>
         `;
-        document.getElementById("searchBox").addEventListener("input", handleSearch);
       }
     });
 
-    // ✅ Handle Search across collections
-    async function handleSearch(e) {
-      const query = e.target.value.toLowerCase();
-      if (!query) {
-        searchResults.style.display = "none";
+    // ✅ Search functionality
+    const searchBar = document.getElementById("searchBar");
+    const resultsSection = document.getElementById("searchResultsSection");
+
+    async function performSearch(queryText) {
+      if (queryText.length < 2) {
+        resultsSection.style.display = "none";
         return;
       }
 
-      let results = { events: [], users: [], skills: [] };
+      const results = [];
+      const lowerQuery = queryText.toLowerCase();
 
       // 🔍 Search Events
-      const eventsSnap = await getDocs(collection(db, "events"));
-      eventsSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.name?.toLowerCase().includes(query)) {
-          results.events.push({ id: doc.id, ...data });
-        }
+      const eventsRef = collection(db, "events");
+      const qEvents = query(eventsRef, where("name", ">=", lowerQuery), where("name", "<=", lowerQuery + '\uf8ff'));
+      const eventSnap = await getDocs(qEvents);
+      eventSnap.forEach(doc => {
+        results.push({ type: 'Event', id: doc.id, name: doc.data().name });
       });
 
       // 🔍 Search Users
-      const usersSnap = await getDocs(collection(db, "users"));
-      usersSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.username?.toLowerCase().includes(query)) {
-          results.users.push({ id: doc.id, ...data });
-        }
+      const usersRef = collection(db, "users");
+      const qUsers = query(usersRef, where("firstName", ">=", lowerQuery), where("firstName", "<=", lowerQuery + '\uf8ff'));
+      const userSnap = await getDocs(qUsers);
+      userSnap.forEach(doc => {
+        results.push({ type: 'User', id: doc.id, name: `${doc.data().firstName} ${doc.data().lastName || ""}`.trim() });
       });
 
       // 🔍 Search Skills
-      const skillsSnap = await getDocs(collection(db, "skills"));
+      const skillsRef = collection(db, "skills");
+      const qSkills = query(skillsRef, where("name", ">=", lowerQuery), where("name", "<=", lowerQuery + '\uf8ff'));
+      const skillsSnap = await getDocs(qSkills);
       skillsSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.skillName?.toLowerCase().includes(query)) {
-          results.skills.push({ id: doc.id, ...data });
-        }
+        results.push({ type: 'Skill', id: doc.id, name: doc.data().name });
       });
 
-      renderSearchResults(results);
+      displayResults(results);
     }
 
-    function renderSearchResults(results) {
-      let html = "";
-
-      if (results.events.length) {
-        html += `<div class="search-section"><h4>Events</h4>`;
-        html += results.events.map(e => `
-          <div class="search-result-item" onclick="window.location.href='/event-details.html?id=${e.id}'">
-            <div class="event-name">${e.name}</div>
-            <div class="event-type">${e.type || "General Event"}</div>
-          </div>
-        `).join("");
-        html += `</div>`;
+    function displayResults(results) {
+      resultsSection.innerHTML = "";
+      if (results.length === 0) {
+        resultsSection.style.display = "none";
+        return;
       }
 
-      if (results.users.length) {
-        html += `<div class="search-section"><h4>People</h4>`;
-        html += results.users.map(u => `
-          <div class="search-result-item" onclick="window.location.href='/profile.html?id=${u.id}'">
-            <div class="event-name">${u.username}</div>
-            <div class="event-type">${u.email || "User"}</div>
-          </div>
-        `).join("");
-        html += `</div>`;
-      }
+      results.forEach(result => {
+        const item = document.createElement("div");
+        item.classList.add("result-item");
+        item.innerHTML = `
+          <span class="result-name">${result.name}</span>
+          <span class="result-type">${result.type}</span>
+        `;
+        item.addEventListener("click", () => {
+          if (result.type === "Event") {
+            localStorage.setItem("selectedEventId", result.id);
+            window.location.href = "/event-details.html";
+          } else if (result.type === "User") {
+            window.location.href = \`/profile.html?id=\${result.id}\`;
+          } else if (result.type === "Skill") {
+            window.location.href = \`/skills.html?id=\${result.id}\`;
+          }
+        });
+        resultsSection.appendChild(item);
+      });
 
-      if (results.skills.length) {
-        html += `<div class="search-section"><h4>Skills</h4>`;
-        html += results.skills.map(s => `
-          <div class="search-result-item">
-            <div class="event-name">${s.skillName}</div>
-            <div class="event-type">${s.level || "Skill"}</div>
-          </div>
-        `).join("");
-        html += `</div>`;
-      }
-
-      if (!html) html = "<p>No results found.</p>";
-
-      searchResults.innerHTML = html;
-      searchResults.style.display = "block";
+      resultsSection.style.display = "block";
     }
+
+    searchBar.addEventListener("input", e => performSearch(e.target.value));
   </script>
 
-  <!-- ✅ Typewriter Effect -->
-  <script>
-    const text = "Find Your Perfect Team on Synapse!";
-    let i = 0;
-    function typeWriter() {
-      if (i < text.length) {
-        document.getElementById("typewriter-text").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 80);
-      }
-    }
-    typeWriter();
-  </script>
-
+  <script src="js/index.js"></script>
 </body>
 </html>

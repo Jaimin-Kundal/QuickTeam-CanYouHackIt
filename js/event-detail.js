@@ -1,47 +1,89 @@
-// Sample Events Data
-const eventsData = [
-  {id:1, name:"Hackathon 2025", date:"2025-10-15", slots:5, team:["Megha","Jaimin","Bhavya"]},
-  {id:2, name:"AI/ML Sprint", date:"2025-10-20", slots:3, team:["Jaimin","Bhavya"]},
-  {id:3, name:"Frontend Frenzy", date:"2025-11-05", slots:4, team:["Megha","Maritreye"]},
-  {id:4, name:"Backend Bonanza", date:"2025-11-10", slots:2, team:["Jaimin","Bhavya"]},
-];
+// ✅ Import Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-// Get selected event ID from localStorage
-const eventId = parseInt(localStorage.getItem("selectedEventId"));
+// ✅ Firebase config (replace with your values from Firebase console)
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+  authDomain: "synapse-ee716.firebaseapp.com",
+  projectId: "synapse-ee716",
+  storageBucket: "synapse-ee716.firebasestorage.app",
+  messagingSenderId: "894940754670",
+  appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+  measurementId: "G-PW7HGF2LTE"
+};
 
-// Find the event
-const event = eventsData.find(e => e.id === eventId);
+// ✅ Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Check if event exists
-if (!event) {
-  console.error("Event not found!");
-  document.getElementById("eventName").innerText = "Event not found";
-  document.getElementById("eventDate").innerText = "-";
-  document.getElementById("eventSlots").innerText = "-";
-} else {
-  // Display event details
-  document.getElementById("eventName").innerText = event.name;
-  document.getElementById("eventDate").innerText = event.date;
-  document.getElementById("eventSlots").innerText = event.slots;
+const eventDetails = document.getElementById("eventDetails");
+const requestBtn = document.getElementById("requestBtn");
 
-  // Display team members
-  const teamDiv = document.getElementById("teamMembers");
-  event.team.forEach(member => {
-    const div = document.createElement("div");
-    div.className = "member";
-    div.innerHTML = `<img src="images/${member.toLowerCase()}.jpg" alt="${member}"><h4>${member}</h4>`;
-    teamDiv.appendChild(div);
-  });
+const eventId = localStorage.getItem("selectedEventId");
+let currentEvent = null;
 
-  // Handle request button click
-  document.getElementById("requestBtn").addEventListener("click", () => {
-    if(event.slots > 0){
-      event.slots--;
-      document.getElementById("eventSlots").innerText = event.slots;
-      alert("Request sent successfully!");
-      window.location.href = 'minigame.html'; // Redirect
+// Load event details
+async function loadEvent() {
+  if (!eventId) {
+    eventDetails.innerHTML = "<p>No event selected.</p>";
+    return;
+  }
+
+  try {
+    const docRef = doc(db, "events", eventId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      currentEvent = { id: docSnap.id, ...docSnap.data() };
+      displayEvent(currentEvent);
     } else {
-      alert("Sorry, no slots remaining!");
+      eventDetails.innerHTML = "<p>Event not found.</p>";
+    }
+  } catch (err) {
+    console.error("Error fetching event:", err);
+    eventDetails.innerHTML = `<p style="color:red;">Failed to load event details. Check console.</p>`;
+  }
+}
+
+// Display event info
+function displayEvent(event) {
+  eventDetails.innerHTML = `
+    <h2>${event.name}</h2>
+    <p><b>Type:</b> ${event.type}</p>
+    <p><b>Date:</b> ${event.date}</p>
+    <p><b>Remaining Slots:</b> <span id="slotCount">${event.slots}</span></p>
+  `;
+  requestBtn.style.display = "block";
+}
+
+// Handle request to join
+if (requestBtn) {
+  requestBtn.addEventListener("click", async () => {
+    if (!currentEvent) return;
+
+    if (currentEvent.slots > 0) {
+      const newSlots = currentEvent.slots - 1;
+
+      try {
+        await updateDoc(doc(db, "events", currentEvent.id), {
+          slots: newSlots
+        });
+
+        currentEvent.slots = newSlots;
+        document.getElementById("slotCount").textContent = newSlots;
+
+        alert("✅ You successfully joined the event!");
+      } catch (err) {
+        console.error("Error updating slots:", err);
+        alert("❌ Failed to join event. Try again.");
+      }
+    } else {
+      alert("⚠️ No slots available.");
     }
   });
 }
+
+// Load event on page start
+loadEvent();

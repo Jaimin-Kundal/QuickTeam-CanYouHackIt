@@ -43,13 +43,13 @@ h2, h3, h4, p { margin: 0; }
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 2rem;
+  gap: 1.5rem;
   margin: 0;
   padding: 0;
 }
 
 .nav-links li a {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
   color: #222;
   transition: 0.2s;

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
-    <div class="blob blob1"></div>
+  <div class="blob blob1"></div>
   <div class="blob blob2"></div>
   <div class="blob blob3"></div>
   <div class="blob blob4"></div>
@@ -17,7 +17,7 @@
   <div class="profile-card">
     <h2 class="profile-title">Your <span>Profile</span></h2>
     <div class="profile-pic-wrapper">
-      <img src="images/pplogo.jpg" alt="Profile Picture" class="profile-pic">
+      <img src="images/pplogo.jpg" alt="Profile Picture" class="profile-pic" id="profile-pic">
     </div>
     <div class="profile-info-display">
       <p>Full Name: <span id="display-fullname"></span></p>
@@ -31,15 +31,16 @@
       <p>Previous Teams: <span id="display-teams"></span></p>
       <p>Experience: <span id="display-experience"></span></p>
     </div>
-    <a href="/profile.html" class="edit-profile-btn">Edit Profile</a>
+    <a href="/ProfilePage.html" class="edit-profile-btn">Edit Profile</a>
   </div>
+
   <script type="module">
     // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
     
-    // Your Firebase config
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
       authDomain: "synapse-ee716.firebaseapp.com",
@@ -54,16 +55,20 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Show logged-in user’s profile
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
+        // Redirect to login if not logged in
         window.location.href = "/login_Page.html";
       } else {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
+        
         if (docSnap.exists()) {
           const data = docSnap.data();
-          document.getElementById("display-fullname").textContent = ${data.firstName || ''} ${data.lastName || ''}.trim();
-          document.getElementById("display-email").textContent = data.email || "";
+
+          document.getElementById("display-fullname").textContent = `${data.firstName || ""} ${data.lastName || ""}`.trim();
+          document.getElementById("display-email").textContent = data.email || user.email || "";
           document.getElementById("display-dob").textContent = data.dob || "";
           document.getElementById("display-phone").textContent = data.phone || "";
           document.getElementById("display-location").textContent = data.location || "";
@@ -72,6 +77,13 @@
           document.getElementById("display-achievements").textContent = data.achievements || "";
           document.getElementById("display-teams").textContent = data.teams || "";
           document.getElementById("display-experience").textContent = data.experience || "";
+
+          // Profile picture if saved in Firestore
+          if (data.profilePicUrl) {
+            document.getElementById("profile-pic").src = data.profilePicUrl;
+          }
+        } else {
+          alert("Profile not found. Please update your details in Edit Profile.");
         }
       }
     });

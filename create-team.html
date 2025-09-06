@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/create-team.css">
+</head>
+<body>
+
+<main id="createTeamOuter">
+  <div id="createTeamContainer">
+    <h2 class="event-title">Create <span>New Team</span></h2>
+
+    <form id="createTeamForm">
+      <div class="input-field">
+        <label for="teamName">Team Name:</label>
+        <input type="text" id="teamName" placeholder="Enter team name" required>
+      </div>
+
+      <div class="input-field">
+        <label for="teamLeader">Team Leader:</label>
+        <input type="text" id="teamLeader" placeholder="Leader name" required>
+      </div>
+
+      <div class="input-field">
+        <label for="teamMembers">Team Members (comma separated):</label>
+        <input type="text" id="teamMembers" placeholder="Member1, Member2..." required>
+      </div>
+
+      <div class="input-field">
+        <label for="associatedEvent">Associated Event:</label>
+        <input type="text" id="associatedEvent" placeholder="Event name" required>
+      </div>
+
+      <button class="submit-btn" type="submit">Create Team</button>
+      <p id="teamStatusMsg"></p>
+    </form>
+  </div>
+</main>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="js/create-team.js"></script>
+
+</body>
+</html>

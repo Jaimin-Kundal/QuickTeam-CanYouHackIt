@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="css/create-team.css">
 </head>
 <body>
-
 <main id="createTeamOuter">
   <div id="createTeamContainer">
     <h2 class="event-title">Create <span>New Team</span></h2>
@@ -29,24 +28,13 @@
         <input type="text" id="teamMembers" placeholder="Member1, Member2..." required>
       </div>
 
-      <div class="input-field">
-        <label for="associatedEvent">Associated Event:</label>
-        <input type="text" id="associatedEvent" placeholder="Event name" required>
-      </div>
-
       <button class="submit-btn" type="submit">Create Team</button>
       <p id="teamStatusMsg"></p>
     </form>
   </div>
 </main>
-<a href="event-detail.html?id=EVENT_ID">Back to Event</a>
 
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="js/create-team.js"></script>
-
+<!-- JS -->
+<script type="module" src="js/create-team.js"></script>
 </body>
 </html>

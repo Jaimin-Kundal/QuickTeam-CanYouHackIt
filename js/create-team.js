@@ -15,10 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Get eventId from URL
-const params = new URLSearchParams(window.location.search);
-const eventId = params.get("id");
-
 const form = document.getElementById("createTeamForm");
 const statusMsg = document.getElementById("teamStatusMsg");
 
@@ -27,35 +23,27 @@ form.addEventListener("submit", async (e) => {
 
   const teamName = document.getElementById("teamName").value.trim();
   const teamLeader = document.getElementById("teamLeader").value.trim();
-  const teamMembers = document.getElementById("teamMembers").value
-                        .split(",")
-                        .map(m => m.trim());
+  const teamMembers = document.getElementById("teamMembers").value.split(",").map(m => m.trim());
 
-  if (!teamName || !teamLeader || teamMembers.length === 0 || !eventId) {
-    statusMsg.textContent = "Please fill all fields.";
+  if (!teamName || !teamLeader || teamMembers.length === 0) {
+    statusMsg.textContent = "⚠️ Please fill all fields.";
     statusMsg.style.color = "red";
     return;
   }
 
   try {
-    await addDoc(collection(db, "teams"), {
+    const docRef = await addDoc(collection(db, "teams"), {
       teamName,
       leader: teamLeader,
-      members: teamMembers, // store UIDs here ideally
-      eventId,
+      members: teamMembers,
       createdAt: serverTimestamp()
     });
 
-    statusMsg.textContent = "Team created successfully!";
-    statusMsg.style.color = "green";
-    form.reset();
-
-    // Redirect back to event details
-    window.location.href = `event-detail.html?id=${eventId}`;
-
+    // Redirect to team details page with the teamId
+    window.location.href = `team_details.html?teamId=${docRef.id}`;
   } catch (error) {
-    console.error("Error creating team: ", error);
-    statusMsg.textContent = "Error creating team.";
+    console.error("❌ Error creating team:", error);
+    statusMsg.textContent = "❌ Error creating team.";
     statusMsg.style.color = "red";
   }
 });

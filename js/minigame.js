@@ -1,3 +1,28 @@
+// =============================
+// Firebase Setup
+// =============================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+// ✅ Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCJdzL6hBxD2JwsXdb2QD6rhJK_MIlFfdg",
+  authDomain: "synapse-ee716.firebaseapp.com",
+  projectId: "synapse-ee716",
+  storageBucket: "synapse-ee716.firebasestorage.app",
+  messagingSenderId: "894940754670",
+  appId: "1:894940754670:web:88cedd500b4dca5dc9f9ff",
+  measurementId: "G-PW7HGF2LTE"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// =============================
+// Game Data
+// =============================
 const questions = [
     { prompt:"If you were a programming language, which one?", options:["Python","JavaScript","C++","Go"] },
     { prompt:"Which coding environment do you prefer?", options:["VS Code","IntelliJ","Vim","Sublime"] },
@@ -12,6 +37,9 @@ let currentUser = 1; // Track User 1 or User 2
 const user1Answers = [];
 const user2Answers = [];
 
+// =============================
+// DOM Elements
+// =============================
 const flashcard = document.getElementById('minigame-card');
 const questionFront = document.getElementById('card-question');
 const questionBack = document.getElementById('card-question-back');
@@ -19,6 +47,9 @@ const nextButton = document.getElementById('next-btn');
 const progressBar = document.getElementById('progress-bar');
 const optionsContainer = document.getElementById('options-container');
 
+// =============================
+// Helper Functions
+// =============================
 function showOptions(options){
     optionsContainer.innerHTML = '';
     selectedAnswer = null;
@@ -72,6 +103,46 @@ function calculateCompatibility() {
     return { percentage, message };
 }
 
+// =============================
+// Firestore Save Request
+// =============================
+async function saveRequest(score) {
+    const eventId = localStorage.getItem("selectedEventId"); 
+    if (!eventId) {
+        console.error("No eventId found in localStorage");
+        return;
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+        alert("You must log in first to submit request.");
+        return;
+    }
+
+    const userName = user.displayName || user.email || "Unknown";
+
+    try {
+        await addDoc(collection(db, "events", eventId, "requests"), {
+            userId: user.uid,
+            userName,
+            score,
+            answers: { user1: user1Answers, user2: user2Answers }, // save answers too
+            status: "pending",
+            createdAt: serverTimestamp()
+        });
+
+        alert("✅ Your request has been submitted to the team leader!");
+        // Optionally: redirect back
+        // window.location.href = "event-details.html";
+    } catch (err) {
+        console.error("Error saving request:", err);
+        alert("❌ Could not send request. Try again.");
+    }
+}
+
+// =============================
+// Show Results
+// =============================
 function showResults() {
     document.querySelector('.flashcard-wrapper').style.display = 'none';
     nextButton.style.display = 'none';
@@ -80,14 +151,19 @@ function showResults() {
     const results = calculateCompatibility();
     document.getElementById('compatibility-percentage').textContent = `${results.percentage}%`;
     document.getElementById('compatibility-message').textContent = results.message;
-
     document.getElementById('compatibility-result').style.display = 'block';
+
+    // ✅ Save to Firestore
+    saveRequest(results.percentage);
 
     document.getElementById('restart-btn').addEventListener('click', () => {
         window.location.reload();
     });
 }
 
+// =============================
+// Button Events
+// =============================
 nextButton.addEventListener('click', () => {
     if(currentQuestionIndex > -1 && selectedAnswer === null) {
         alert("Please select an option before proceeding.");
@@ -117,7 +193,7 @@ nextButton.addEventListener('click', () => {
         // Switch to User 2 if currentUser is 1
         if(currentUser === 1){
             currentUser = 2;
-            currentQuestionIndex = -1; // Reset index for User 2
+            currentQuestionIndex = -1; 
             flashcard.classList.remove('flipped');
             setTimeout(updateCard, 300);
         } else {
@@ -127,4 +203,17 @@ nextButton.addEventListener('click', () => {
     }
 });
 
+// =============================
+// Auth Guard
+// =============================
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        alert("Please log in to play this game and submit requests.");
+        // window.location.href = "login_Page.html";
+    }
+});
+
+// =============================
+// Init
+// =============================
 updateCard();
